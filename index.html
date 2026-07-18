@@ -1,0 +1,2297 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kisah Proyek: LMS PJOK Fase E</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* RESET & CORE */
+        body {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            background: #0f172a;
+            color: white;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        /* ANIMATED BACKGROUND GRADIEN */
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            animation: float 12s infinite alternate;
+        }
+
+        .shape1 {
+            width: 50vw;
+            height: 50vw;
+            background: rgba(16, 185, 129, 0.3);
+            top: -20%;
+            left: -10%;
+        }
+
+        /* Emerald Green */
+        .shape2 {
+            width: 45vw;
+            height: 45vw;
+            background: rgba(14, 165, 233, 0.3);
+            bottom: -20%;
+            right: -10%;
+            animation-delay: -6s;
+        }
+
+        /* Sky Blue */
+        .shape3 {
+            width: 30vw;
+            height: 30vw;
+            background: rgba(245, 158, 11, 0.2);
+            top: 30%;
+            left: 40%;
+            animation-duration: 15s;
+        }
+
+        /* Amber */
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(60px, 80px) scale(1.1);
+            }
+        }
+
+        /* DECK CONTAINER */
+        .deck {
+            width: 98vw;
+            max-width: 1500px;
+            height: 96vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .slide {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+            min-height: 0;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            animation: slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* HEADER */
+        .slide-header {
+            text-align: center;
+            margin-bottom: 5px;
+            margin-top: 0px;
+        }
+
+        .slide-badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: inline-block;
+            margin-bottom: 5px;
+            color: #10b981;
+        }
+
+        .slide h2 {
+            margin: 0;
+            font-size: 1.7rem;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            font-weight: 700;
+            color: #f8fafc;
+        }
+
+        /* CONVERSATION STAGE */
+        .conversation {
+            display: flex;
+            flex-direction: row;
+            gap: 25px;
+            flex: 1;
+            min-height: 0;
+            margin-bottom: 50px;
+            padding: 5px 15px;
+            align-items: stretch;
+            position: relative;
+            z-index: 5;
+        }
+
+        .side {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 0;
+            height: 100%;
+        }
+
+        .user-side {
+            flex: 0.7;
+        }
+
+        .ai-side {
+            flex: 2.3;
+        }
+
+        .avatar-box {
+            text-align: center;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .avatar {
+            font-size: 3.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            margin-bottom: 8px;
+        }
+
+        .char-name {
+            font-weight: 700;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #94a3b8;
+        }
+
+        .user-side .avatar {
+            border-color: #10b981;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+        }
+
+        .ai-side .avatar {
+            border-color: #38bdf8;
+            box-shadow: 0 10px 25px rgba(56, 189, 248, 0.2);
+        }
+
+        /* TEXT BOX (SCROLLABLE) */
+        .text-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            font-size: 1.15rem;
+            line-height: 1.7;
+            font-weight: 300;
+            box-sizing: border-box;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-side .text-box {
+            position: relative;
+            white-space: pre-wrap;
+        }
+
+        .user-side .text-box i {
+            color: #10b981;
+            margin-right: 10px;
+            font-size: 1.5rem;
+            float: left;
+            margin-top: 5px;
+        }
+
+        /* AI TEXT BOX (ALWAYS VISIBLE) */
+        .ai-side .text-box {
+            background: rgba(15, 23, 42, 0.95);
+            border-color: rgba(56, 189, 248, 0.4);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.4s;
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.1);
+        }
+
+        .ai-placeholder {
+            display: none !important;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.6;
+                transform: scale(0.95);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+
+            100% {
+                opacity: 0.6;
+                transform: scale(0.95);
+            }
+        }
+
+        .ai-content {
+            display: block !important;
+            text-align: left;
+            animation: fadeIn 0.5s;
+            width: 100%;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* WALKTHROUGH STYLING */
+        .walkthrough h4 {
+            margin: 0 0 20px 0;
+            color: #7dd3fc;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 15px;
+        }
+
+        .walkthrough p {
+            margin-top: 0;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .walkthrough ul {
+            margin: 0 0 15px 0;
+            padding-left: 20px;
+        }
+
+        .walkthrough li {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .walkthrough li strong {
+            color: #34d399;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 3px;
+            font-size: 1.1rem;
+        }
+
+        /* SCROLLBARS */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        /* NAVIGATION */
+        .nav-controls {
+            position: absolute;
+            bottom: 0px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 25px;
+            border-radius: 40px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 50;
+        }
+
+        .nav-controls button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            font-family: 'Outfit';
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.7;
+        }
+
+        .nav-controls button:hover:not(:disabled) {
+            color: #10b981;
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .nav-controls button:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+        }
+
+        .nav-controls span {
+            font-weight: 400;
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            color: #94a3b8;
+        }
+
+        /* RESPONSIVE DESIGN FOR MOBILE & TABLET */
+        @media (max-width: 992px) {
+            body {
+                overflow-y: auto;
+                overflow-x: hidden;
+                height: auto;
+                min-height: 100vh;
+                display: block;
+            }
+
+            .deck {
+                width: 100%;
+                height: auto;
+                min-height: 100vh;
+                overflow: visible;
+                padding: 20px 15px 90px 15px;
+                margin: 0;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .slide {
+                flex: none;
+                height: auto;
+                display: none;
+            }
+
+            .slide.active {
+                display: flex;
+            }
+
+            .slide h2 {
+                font-size: 1.3rem;
+                margin-top: 15px;
+            }
+
+            .conversation {
+                height: auto;
+                min-height: 400px;
+                flex-direction: column;
+                gap: 15px;
+                padding: 10px;
+                flex: none;
+            }
+
+            .user-side {
+                flex: none;
+                height: auto;
+            }
+
+            .ai-side {
+                flex: none;
+                height: auto;
+            }
+
+            .avatar-box {
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 10px;
+                margin-bottom: 5px;
+                width: 100%;
+            }
+
+            .avatar {
+                width: 45px;
+                height: 45px;
+                font-size: 2rem;
+                margin-bottom: 0;
+                flex-shrink: 0;
+            }
+
+            .char-name {
+                font-size: 0.8rem;
+            }
+
+            .text-box {
+                padding: 15px;
+                font-size: 0.95rem;
+                line-height: 1.5;
+            }
+
+            .nav-controls {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                transform: none;
+                display: flex !important;
+                padding: 12px 10px;
+                gap: 5px;
+                justify-content: space-between;
+                background-color: rgba(15, 23, 42, 0.98);
+                backdrop-filter: blur(10px);
+                z-index: 1000;
+                border-top: 1px solid #1e293b;
+                box-sizing: border-box;
+                margin: 0;
+            }
+
+            .nav-btn {
+                padding: 8px 10px;
+                font-size: 0.75rem;
+                gap: 5px;
+                flex-shrink: 1;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 35%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .nav-btn i {
+                font-size: 0.75rem;
+            }
+
+            .nav-controls span {
+                font-size: 0.8rem;
+            }
+
+            .dots {
+                gap: 4px;
+                flex-shrink: 0;
+                display: flex;
+            }
+
+            .dot {
+                width: 8px;
+                height: 8px;
+            }
+
+            /* Interactive viewer specific adjustments for mobile */
+            .interactive-viewer-wrapper {
+                padding: 10px;
+            }
+
+            #viewer-workspace {
+                display: flex !important;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            #panel-editor,
+            #panel-preview {
+                width: 100%;
+                height: 350px;
+            }
+
+            .interactive-viewer-wrapper h3 {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* RESPONSIVE DESIGN FOR LANDSCAPE MOBILE */
+        @media (max-width: 992px) and (orientation: landscape) {
+            .deck {
+                padding: 10px 15px 70px 15px;
+            }
+
+            .slide h2 {
+                font-size: 1.1rem;
+                margin-top: 5px;
+            }
+
+            .avatar {
+                width: 35px;
+                height: 35px;
+                font-size: 1.5rem;
+            }
+
+            .text-box {
+                font-size: 0.85rem;
+                padding: 10px;
+            }
+
+            .conversation {
+                min-height: 250px;
+            }
+
+            #panel-editor,
+            #panel-preview {
+                height: 250px;
+            }
+
+            #intro-screen {
+                padding: 20px 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- BACKGROUND -->
+    <div class="bg-shape shape1"></div>
+    <div class="bg-shape shape2"></div>
+    <div class="bg-shape shape3"></div>
+
+    <!-- INTRO SCREEN -->
+    <div id="intro-screen"
+        style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0f172a; z-index: 9999; overflow-y: auto; transition: opacity 0.8s ease-in-out, visibility 0.8s;">
+        <div
+            style="min-height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 40px 20px; box-sizing: border-box; margin: auto;">
+            <h1
+                style="font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; margin-bottom: 5px; text-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+                Kisah Proyek LMS PJOK</h1>
+            <p
+                style="font-size: clamp(1rem, 2vw, 1.2rem); font-weight: 300; opacity: 0.8; margin-bottom: 30px; letter-spacing: 1px;">
+                by Adiw for Edu</p>
+
+            <div
+                style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 4px solid #38bdf8; box-shadow: 0 10px 30px rgba(56, 189, 248, 0.4); margin-bottom: 30px; background-color: #1e293b; display: flex; align-items: center; justify-content: center;">
+                <img src="profile.png" alt="Profile Adiw" class="profile-pic"
+                    style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+
+            <div
+                style="max-width: 650px; font-style: italic; font-size: clamp(0.95rem, 2vw, 1.15rem); line-height: 1.7; color: #cbd5e1; margin-bottom: 40px;">
+                "AI bukan untuk menggantikan peran guru, tetapi menjadi <span
+                    style="color: #38bdf8; font-weight: 600;">asisten kerja</span> agar kita bisa lebih fokus pada
+                pembelajaran dan perkembangan murid.<br><br>
+                <span style="color: #a855f7; font-weight: 600;">Jangan ragu mencoba. Kadang, cukup mulai dengan
+                    &quot;curhat&quot; ke AI, ide-ide hebat justru bermunculan.</span> 🚀"
+            </div>
+
+            <button onclick="startPresentation()"
+                style="background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border: none; padding: 15px 40px; font-size: 1.1rem; font-weight: 700; border-radius: 30px; cursor: pointer; box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5); transition: transform 0.2s, box-shadow 0.2s;"
+                onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">Mulai
+                Kisah <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></button>
+        </div>
+    </div>
+
+    <!-- PRESENTATION CONTAINER -->
+    <div class="deck">
+
+        <!-- SLIDE 1 -->
+        <div class="slide active" id="slide-1">
+            <div class="slide-header">
+                <div class="slide-badge">Langkah 1</div>
+                <h2>Inisiasi Grand Desain LMS PJOK</h2>
+            </div>
+            <div class="conversation">
+
+                <!-- USER -->
+                <div class="side user-side">
+                    <div class="avatar-box">
+                        <div class="avatar">👨‍🏫</div>
+                        <div class="char-name">Guru PJOK</div>
+                    </div>
+                    <div class="text-box"><i class="fas fa-quote-left"></i>Anda adalah seorang konsultan desain
+                        pembelajaran profesional dan pengembang sistem Learning Management System (LMS) yang
+                        berpengalaman dalam menyusun solusi digital untuk pendidikan jasmani, olahraga, dan kesehatan
+                        (PJOK) di jenjang SMA.
+
+                        Tugas Anda adalah membuat grand desain LMS PJOK Fase E (Kelas X SMA) yang:
+                        - Sesuai dengan Capaian Pembelajaran PJOK Fase E dalam Kurikulum Merdeka
+                        - Mengakomodasi empat elemen kompetensi: Keterampilan Gerak, Pengetahuan Gerak, Pemanfaatan
+                        Gerak, Pengembangan Karakter dan Internalisasi Nilai
+                        - Dapat diimplementasikan secara nyata di sekolah dengan infrastruktur yang terjangkau.
+
+                        Buatlah desain dalam bentuk dokumen terstruktur yang mencakup 5 komponen utama berikut:
+                        1. Platform yang Harus Persiapkan
+                        2. Materi Ajar yang Terstruktur
+                        3. Asesmen
+                        4. Sistem Manajemen Interaksi
+                        5. Pengaturan Manajemen Pengguna
+                        (Format Output: Dokumen terstruktur, tabel, dan contoh nyata)
+
+                        saya juga lampirkan contoh visualisasinya lms ini juga saya ingin kompatible dan user friendly
+                        dengan UI yang modern kekinian dan relevan dengan anak usia SMA
+                        saya juga lampirkan Screenshot 2026-07-11 054411.jpg
+                        saya juga menambahkan link googledocs berisi grand desain lms pjok
+
+                        <br>
+                        <br>
+                        <i><i class="fas fa-image"
+                                style="float:none; font-size:1rem; margin-right:5px; margin-top:0;"></i> *Melampirkan
+                            referensi gambar UI LMS*</i>
+                        <div id="image-container">
+                            <iframe src="https://drive.google.com/file/d/1vdY24kWd0wTxW7SlE-PxAjUd3WpjHPH1/preview"
+                                width="100%" height="280" allow="autoplay"
+                                style="border:1px solid rgba(255,255,255,0.2); border-radius:10px; margin-top:10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);"></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI -->
+                <div class="side ai-side">
+                    <div class="avatar-box">
+                        <div class="avatar">🤖</div>
+                        <div class="char-name">AI Assistant</div>
+                    </div>
+                    <div class="text-box">
+                        <div class="ai-placeholder">
+                            <i class="fas fa-hand-pointer"></i>
+                            Sentuh/Arahkan Mouse untuk Melihat Respon AI
+                        </div>
+                        <div class="ai-content walkthrough">
+                            <h4><i class="fas fa-check-circle"></i> Respon AI: Eksekusi Grand Desain</h4>
+                            <p>Dokumen grand desain untuk platform LMS PJOK Fase E Jenjang SMA telah berhasil dibuat
+                                sesuai dengan seluruh kriteria Kurikulum Merdeka dan arsitektur teknis modern yang Anda
+                                inginkan.</p>
+
+                            <div
+                                style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 12px; padding: 15px; margin: 20px 0; display:flex; flex-direction:column; gap:10px; align-items:center;">
+                                <button
+                                    onclick="window.open('https://docs.google.com/document/d/1A0uxcdNsKF-aghBrxg7hpeTncEx_P5eckK3T5XD-b9A/edit?usp=sharing', '_blank')"
+                                    style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 12px 25px; border-radius: 30px; font-family: 'Outfit'; font-weight: 600; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); transition: transform 0.2s;">
+                                    <i class="fas fa-file-alt"></i> BUKA GRAND DESAIN LMS (Google Docs)
+                                </button>
+                            </div>
+
+                            <p style="margin-top:20px; font-weight:600; color:#34d399;">Ringkasan Desain yang
+                                Diimplementasikan:</p>
+                            <ul>
+                                <li><strong>Teknologi Fleksibel & Dinamis:</strong>Menggunakan arsitektur decoupled di
+                                    mana antarmuka (frontend) dikembangkan menggunakan HTML5/Tailwind CSS modern yang
+                                    di-hosting di GitHub Pages. Integrasi data real-time menggunakan BaaS
+                                    (Supabase/Firebase).</li>
+                                <li><strong>Kesesuaian Kurikulum Merdeka:</strong>Menyediakan pemetaan modul yang
+                                    mengintegrasikan secara utuh elemen keterampilan gerak, pengetahuan, pemanfaatan,
+                                    hingga pengembangan karakter.</li>
+                                <li><strong>Fitur Khusus PJOK:</strong>Sistem manajemen video tugas praktik berenkripsi,
+                                    mekanisme peer-review, serta sistem motivasi berbasis badges & leaderboard.</li>
+                            </ul>
+
+                            <p style="font-style:italic; color:#94a3b8; font-size:1rem;">Jika Anda membutuhkan contoh
+                                potongan kode awal (boilerplate) HTML dan JavaScript untuk struktur integrasi database
+                                real-time tersebut, silakan beri tahu saya!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2 -->
+        <div class="slide" id="slide-2">
+            <div class="slide-header">
+                <div class="slide-badge">Langkah 2</div>
+                <h2>Integrasi Code & Dark Mode</h2>
+            </div>
+            <div class="conversation">
+
+                <!-- USER -->
+                <div class="side user-side">
+                    <div class="avatar-box">
+                        <div class="avatar">👨‍🏫</div>
+                        <div class="char-name">Guru PJOK</div>
+                    </div>
+                    <div class="text-box"><i class="fas fa-quote-left"></i> Buatkan potongan kode awal (boilerplate)
+                        HTML dan JavaScript untuk struktur integrasi database real-time tersebut<br><br>tambahkan fitur
+                        dark mode dan light mode, serta tampilkan spendtime supaya murid dapat mengetahui sudah berapa
+                        lama berselancar untuk alasan kesehatan juga<br><br>buatkan html yang utuh</div>
+                </div>
+
+                <!-- AI -->
+                <div class="side ai-side">
+                    <div class="avatar-box">
+                        <div class="avatar">🤖</div>
+                        <div class="char-name">AI Assistant</div>
+                    </div>
+                    <div class="text-box">
+                        <div class="ai-placeholder">
+                            <i class="fas fa-hand-pointer"></i>
+                            Sentuh/Arahkan Mouse untuk Melihat Respon AI
+                        </div>
+                        <div class="ai-content walkthrough" style="max-height: 55vh; overflow-y: auto;">
+                            <h4><i class="fas fa-code"></i> Respon AI: Boilerplate & VS Code View</h4>
+                            <p>Berikut adalah kode HTML utuh yang menggabungkan struktur antarmuka, kerangka Dark Mode,
+                                sistem pencatat waktu kesehatan (Spend Time Tracker), serta integrasi skrip Firebase
+                                secara terpadu.</p>
+                            <p>Anda cukup menyalin kode ini ke dalam satu file bernama <code>index.html</code> dan siap
+                                di-hosting di GitHub Pages.</p>
+
+                            <!-- INTERACTIVE LIVE HTML VIEWER -->
+                            <div class="interactive-viewer-wrapper"
+                                style="margin-top: 20px; background-color: #0f172a; border-radius: 12px; padding: 20px; border: 1px solid #1e293b; box-shadow: 0 15px 35px rgba(0,0,0,0.4); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+
+                                <!-- HEADER -->
+                                <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px;">
+                                    <div
+                                        style="background: linear-gradient(135deg, #3b82f6, #2563eb); padding: 8px; border-radius: 8px; color: white;">
+                                        <i class="fas fa-laptop-code" style="font-size: 1.2rem;"></i>
+                                    </div>
+                                    <div>
+                                        <h3
+                                            style="color: #f8fafc; font-size: 1.1rem; font-weight: 700; margin: 0 0 4px 0;">
+                                            Interactive Live HTML Viewer</h3>
+                                        <p style="color: #94a3b8; font-size: 0.8rem; margin: 0;">Ruang uji coba langsung
+                                            bagi peserta. Ketik kode di panel kiri, kontrol layout melalui tombol di
+                                            bawah.</p>
+                                    </div>
+                                </div>
+
+                                <!-- TOOLBAR -->
+                                <div
+                                    style="background-color: #1e293b; border-radius: 8px; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                                    <div style="display: flex; align-items: center; gap: 15px;">
+                                        <button
+                                            style="background: transparent; border: none; color: #cbd5e1; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 6px;"><i
+                                                class="fas fa-arrow-left"></i> Kembali</button>
+                                        <div style="width: 1px; height: 16px; background-color: #334155;"></div>
+                                        <span style="color: #94a3b8; font-size: 0.8rem;">Layout:</span>
+                                        <div
+                                            style="display: flex; background-color: #0f172a; border-radius: 6px; overflow: hidden; border: 1px solid #334155;">
+                                            <button onclick="setLayout('split')" id="btn-layout-split"
+                                                style="background-color: #3b82f6; color: white; border: none; padding: 6px 12px; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;"><i
+                                                    class="fas fa-columns"></i> Separuh</button>
+                                            <button onclick="setLayout('editor')" id="btn-layout-editor"
+                                                style="background-color: transparent; color: #cbd5e1; border: none; padding: 6px 12px; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;"><i
+                                                    class="fas fa-code"></i> Editor Penuh</button>
+                                            <button onclick="setLayout('preview')" id="btn-layout-preview"
+                                                style="background-color: transparent; color: #cbd5e1; border: none; padding: 6px 12px; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;"><i
+                                                    class="fas fa-play-circle"></i> Preview Penuh</button>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; gap: 10px;">
+                                        <button
+                                            style="background-color: transparent; border: 1px solid #334155; color: #fbbf24; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;"><i
+                                                class="fas fa-undo"></i> Reset</button>
+                                        <button
+                                            style="background-color: #334155; border: none; color: #38bdf8; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;"><i
+                                                class="fas fa-download"></i> Download HTML</button>
+                                    </div>
+                                </div>
+
+                                <!-- WORKSPACE -->
+                                <div id="viewer-workspace"
+                                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; transition: all 0.3s ease;">
+
+                                    <!-- EDITOR PANEL -->
+                                    <div id="panel-editor" style="display: flex; flex-direction: column; min-width: 0;">
+                                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                                            <i class="fab fa-html5" style="color: #f97316; font-size: 0.9rem;"></i>
+                                            <span
+                                                style="color: #94a3b8; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Raw
+                                                HTML Editor</span>
+                                        </div>
+                                        <div
+                                            style="background-color: #020617; border-radius: 8px; border: 1px solid #1e293b; padding: 15px; height: 350px; overflow-y: auto; overflow-x: auto; flex-grow: 1;">
+                                            <pre
+                                                style="margin: 0; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.8rem; line-height: 1.6; color: #e2e8f0;"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;id&quot; class=&quot;scroll-smooth&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;LMS PJOK Modern - Fase E SMA&lt;/title&gt;
+    
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;script&gt;
+        // Konfigurasi Tailwind untuk mendukung class dark mode
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    &lt;/script&gt;
+    
+    &lt;link href=&quot;https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+    
+    &lt;style&gt;
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body class=&quot;bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 transition-colors duration-300 min-h-screen flex flex-col&quot;&gt;
+
+    &lt;nav class=&quot;bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50 px-6 py-4 flex justify-between items-center transition-colors duration-300 shadow-sm&quot;&gt;
+        &lt;div class=&quot;flex items-center gap-3&quot;&gt;
+            &lt;div class=&quot;w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-200 dark:shadow-none&quot;&gt;
+                P
+            &lt;/div&gt;
+            &lt;div&gt;
+                &lt;h1 class=&quot;font-bold text-lg leading-tight text-slate-900 dark:text-white tracking-tight&quot;&gt;LMS PJOK&lt;/h1&gt;
+                &lt;p class=&quot;text-xs text-slate-500 dark:text-slate-400&quot;&gt;Fase E â€¢ Kelas X SMA&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        
+        &lt;div class=&quot;flex items-center gap-4&quot;&gt;
+            &lt;div id=&quot;time-tracker&quot; class=&quot;flex items-center gap-2 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 px-3 py-1.5 rounded-xl transition-all&quot;&gt;
+                &lt;span class=&quot;relative flex h-2 w-2&quot;&gt;
+                    &lt;span class=&quot;animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75&quot;&gt;&lt;/span&gt;
+                    &lt;span class=&quot;relative inline-flex rounded-full h-2 w-2 bg-amber-500&quot;&gt;&lt;/span&gt;
+                &lt;/span&gt;
+                &lt;span class=&quot;text-xs font-semibold text-amber-800 dark:text-amber-300&quot;&gt;
+                    â ±ï¸  Durasi Layar: &lt;span id=&quot;spend-time-clock&quot; class=&quot;font-mono&quot;&gt;00:00&lt;/span&gt;
+                &lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;button id=&quot;theme-toggle&quot; class=&quot;p-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-xl transition-colors focus:outline-none&quot; aria-label=&quot;Toggle Dark Mode&quot;&gt;
+                &lt;svg id=&quot;theme-toggle-light-icon&quot; class=&quot;hidden w-5 h-5 text-amber-500&quot; fill=&quot;currentColor&quot; viewBox=&quot;0 0 20 20&quot;&gt;
+                    &lt;path d=&quot;M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 14.05a1 1 0 011.414 0l.707.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414zm-.707-8.485a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0zM4 11a1 1 0 100-2H3a1 1 0 100 2h1z&quot;&gt;&lt;/path&gt;
+                &lt;/svg&gt;
+                &lt;svg id=&quot;theme-toggle-dark-icon&quot; class=&quot;hidden w-5 h-5 text-slate-500&quot; fill=&quot;currentColor&quot; viewBox=&quot;0 0 20 20&quot;&gt;
+                    &lt;path d=&quot;M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z&quot;&gt;&lt;/path&gt;
+                &lt;/svg&gt;
+            &lt;/button&gt;
+
+            &lt;div class=&quot;flex items-center gap-2 bg-slate-100 dark:bg-slate-700 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-600&quot;&gt;
+                &lt;div class=&quot;w-6 h-6 bg-emerald-500 text-white font-bold text-[10px] rounded-full flex items-center justify-center&quot;&gt;S&lt;/div&gt;
+                &lt;span class=&quot;text-xs font-medium text-slate-700 dark:text-slate-200 hidden md:inline&quot;&gt;Siswa Masa Kini&lt;/span&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/nav&gt;
+
+    &lt;div id=&quot;health-alert&quot; class=&quot;fixed bottom-5 right-5 z-50 max-w-sm bg-white dark:bg-slate-800 border-l-4 border-amber-500 p-5 rounded-2xl shadow-2xl transform translate-y-28 opacity-0 transition-all duration-500 pointer-events-none&quot;&gt;
+        &lt;div class=&quot;flex items-start gap-3&quot;&gt;
+            &lt;span class=&quot;text-2xl&quot;&gt;ðŸ‘€&lt;/span&gt;
+            &lt;div&gt;
+                &lt;h5 class=&quot;font-bold text-sm text-slate-900 dark:text-white&quot;&gt;Waktunya Mengistirahatkan Mata!&lt;/h5&gt;
+                &lt;p class=&quot;text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed&quot;&gt;
+                    Kamu sudah belajar selama &lt;span id=&quot;alert-minutes&quot; class=&quot;font-bold text-amber-600 dark:text-amber-400&quot;&gt;15&lt;/span&gt; menit di depan gadget. Yuk, lakukan aturan 20-20-20: Alihkan pandangan ke objek sejauh 20 kaki (6 meter) selama 20 detik untuk mencegah mata lelah dan tegang.
+                &lt;/p&gt;
+                &lt;button onclick=&quot;closeHealthAlert()&quot; class=&quot;mt-3 bg-amber-500 hover:bg-amber-600 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg transition-colors&quot;&gt;
+                    Saya Mengerti &amp; Sudah Peregangan
+                &lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;main class=&quot;max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8 flex-grow w-full&quot;&gt;
+        
+        &lt;div class=&quot;lg:col-span-2 space-y-6&quot;&gt;
+            &lt;div class=&quot;flex justify-between items-center&quot;&gt;
+                &lt;h2 class=&quot;text-xl font-bold text-slate-900 dark:text-white tracking-tight&quot;&gt;Modul Pembelajaran Aktif&lt;/h2&gt;
+                &lt;span class=&quot;bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 text-xs font-semibold px-2.5 py-1 rounded-full border border-blue-200 dark:border-blue-900 flex items-center gap-1.5&quot;&gt;
+                    &lt;span class=&quot;w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse&quot;&gt;&lt;/span&gt; Database Dinamis
+                &lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;div id=&quot;modules-container&quot; class=&quot;grid grid-cols-1 md:grid-cols-2 gap-6&quot;&gt;
+                &lt;div class=&quot;animate-pulse bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 h-48 col-span-2 flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 gap-2&quot;&gt;
+                    &lt;svg class=&quot;animate-spin h-6 w-6 text-blue-500&quot; fill=&quot;none&quot; viewBox=&quot;0 0 24 24&quot;&gt;
+                        &lt;circle class=&quot;opacity-25&quot; cx=&quot;12&quot; cy=&quot;12&quot; r=&quot;10&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;4&quot;&gt;&lt;/circle&gt;
+                        &lt;path class=&quot;opacity-75&quot; fill=&quot;currentColor&quot; d=&quot;M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z&quot;&gt;&lt;/path&gt;
+                    &lt;/svg&gt;
+                    &lt;span class=&quot;text-xs&quot;&gt;Menghubungkan ke Real-time Database...&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;space-y-6&quot;&gt;
+            &lt;div class=&quot;bg-gradient-to-br from-indigo-600 to-blue-700 p-6 rounded-2xl text-white shadow-md relative overflow-hidden&quot;&gt;
+                &lt;div class=&quot;absolute -right-6 -bottom-6 opacity-10 text-9xl font-bold select-none&quot;&gt;ðŸ¤¸&lt;/div&gt;
+                &lt;h3 class=&quot;font-bold text-base mb-2 flex items-center gap-2&quot;&gt;
+                    ðŸ’¡ Tips Posisi Sehat (PJOK)
+                &lt;/h3&gt;
+                &lt;p class=&quot;text-xs text-indigo-100 leading-relaxed&quot;&gt;
+                    Menjaga kesehatan tidak hanya saat olahraga di lapangan. Pastikan posisi punggung Anda tegak bersandar, siku membentuk sudut 90 derajat, dan jarak pandang ke layar monitor minimal 50-60 cm untuk menjaga kesehatan tulang belakang (*posture alignment*).
+                &lt;/p&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm transition-colors duration-300&quot;&gt;
+                &lt;h3 class=&quot;text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2 uppercase tracking-wider&quot;&gt;
+                    ðŸ † Aktivitas Fisik Teraktif
+                &lt;/h3&gt;
+                &lt;div class=&quot;space-y-3&quot;&gt;
+                    &lt;div class=&quot;flex justify-between items-center p-3 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-100 dark:border-amber-900/40&quot;&gt;
+                        &lt;span class=&quot;font-medium text-xs text-amber-900 dark:text-amber-300&quot;&gt;1. Dimas Pratama (X-A)&lt;/span&gt;
+                        &lt;span class=&quot;bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md&quot;&gt;2,450 XP&lt;/span&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-700/40 rounded-xl&quot;&gt;
+                        &lt;span class=&quot;font-medium text-xs text-slate-700 dark:text-slate-300&quot;&gt;2. Sarah Amelia (X-C)&lt;/span&gt;
+                        &lt;span class=&quot;bg-slate-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-md&quot;&gt;2,100 XP&lt;/span&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/main&gt;
+
+    &lt;footer class=&quot;bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 text-center py-4 text-xs text-slate-400 dark:text-slate-500 transition-colors duration-300&quot;&gt;
+        &amp;copy; 2026 Grand Desain Proyek LMS PJOK SMA â€¢ Kompatibel Platform Mandiri Dinamis
+    &lt;/footer&gt;
+
+    &lt;script type=&quot;module&quot;&gt;
+        // Mengimpor SDK Firebase v10 secara CDN langsung di browser
+        import { initializeApp } from &quot;https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js&quot;;
+        import { getFirestore, collection, onSnapshot } from &quot;https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js&quot;;
+
+        // Konfigurasi Database Firebase (Silakan ganti dengan kredensial dari konsol Firebase Anda)
+        const firebaseConfig = {
+            apiKey: &quot;AIzaSyA1234567890-YOUR-API-KEY&quot;,
+            authDomain: &quot;lms-pjok-sekolah.firebaseapp.com&quot;,
+            projectId: &quot;lms-pjok-sekolah&quot;,
+            storageBucket: &quot;lms-pjok-sekolah.appspot.com&quot;,
+            messagingSenderId: &quot;1234567890&quot;,
+            appId: &quot;1:1234567890:web:abcdef123456&quot;
+        };
+
+        // Inisialisasi Firebase &amp; Firestore
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const modulesContainer = document.getElementById(&quot;modules-container&quot;);
+
+        // ==========================================
+        // FITUR DARK &amp; LIGHT MODE HANDLER
+        // ==========================================
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const darkIcon = document.getElementById('theme-toggle-dark-icon');
+        const lightIcon = document.getElementById('theme-toggle-light-icon');
+
+        // Cek preferensi sistem atau penyimpanan lokal pengguna
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            lightIcon.classList.remove('hidden');
+        } else {
+            document.documentElement.classList.remove('dark');
+            darkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            lightIcon.classList.toggle('hidden');
+            darkIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        // ==========================================
+        // FITUR KESEHATAN: SPEND TIME TRACKER
+        // ==========================================
+        let secondsSpent = 0;
+        const clockElement = document.getElementById('spend-time-clock');
+        const healthAlertBox = document.getElementById('health-alert');
+        const alertMinutesTxt = document.getElementById('alert-minutes');
+
+        function initTimeTracker() {
+            setInterval(() =&gt; {
+                secondsSpent++;
+                
+                let mins = Math.floor(secondsSpent / 60);
+                let secs = secondsSpent % 60;
+                
+                mins = mins &lt; 10 ? &quot;0&quot; + mins : mins;
+                secs = secs &lt; 10 ? &quot;0&quot; + secs : secs;
+                
+                clockElement.innerText = `${mins}:${secs}`;
+
+                // Memicu peringatan kesehatan setiap 15 menit belajar di depan layar (900 detik)
+                if (secondsSpent % 900 === 0 &amp;&amp; secondsSpent !== 0) {
+                    alertMinutesTxt.innerText = Math.floor(secondsSpent / 60);
+                    healthAlertBox.classList.remove('translate-y-28', 'opacity-0', 'pointer-events-none');
+                }
+            }, 1000);
+        }
+
+        // Fungsi penutup alert box
+        window.closeHealthAlert = function() {
+            healthAlertBox.classList.add('translate-y-28', 'opacity-0', 'pointer-events-none');
+        };
+
+        // ==========================================
+        // MENDENGARKAN DATA SECARA REAL-TIME (FIRESTORE)
+        // ==========================================
+        function initRealtimeDatabase() {
+            const modulesCollection = collection(db, &quot;modul_pjok&quot;);
+
+            // Fungsi listener onSnapshot mendengarkan perubahan database real-time tanpa reload halaman
+            onSnapshot(modulesCollection, (snapshot) =&gt; {
+                modulesContainer.innerHTML = &quot;&quot;;
+                
+                if (snapshot.empty) {
+                    modulesContainer.innerHTML = `
+                        &lt;div class=&quot;col-span-2 text-center py-12 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 text-sm&quot;&gt;
+                            Belum ada modul aktif yang diinput oleh Guru di Database Firebase.
+                        &lt;/div&gt;
+                    `;
+                    return;
+                }
+
+                snapshot.forEach((doc) =&gt; {
+                    const item = doc.data();
+                    const card = `
+                        &lt;div class=&quot;bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6 flex flex-col justify-between transition-all hover:shadow-md duration-300&quot;&gt;
+                            &lt;div&gt;
+                                &lt;div class=&quot;flex items-center justify-between mb-3&quot;&gt;
+                                    &lt;span class=&quot;bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase&quot;&gt;
+                                        ${item.kategori || 'Aktivitas'}
+                                    &lt;/span&gt;
+                                    &lt;span class=&quot;text-xs text-slate-400 font-medium&quot;&gt;${item.durasi || '0'} Menit&lt;/span&gt;
+                                &lt;/div&gt;
+                                &lt;h4 class=&quot;font-bold text-slate-900 dark:text-white text-base mb-2&quot;&gt;${item.judul}&lt;/h4&gt;
+                                &lt;p class=&quot;text-xs text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed mb-4&quot;&gt;${item.deskripsi}&lt;/p&gt;
+                            &lt;/div&gt;
+                            &lt;div class=&quot;pt-4 border-t border-slate-100 dark:border-slate-700 flex justify-between items-center&quot;&gt;
+                                &lt;span class=&quot;text-[11px] text-slate-400 dark:text-slate-500 truncate max-w-[130px]&quot;&gt;
+                                    Elemen: &lt;strong class=&quot;text-slate-600 dark:text-slate-300 font-medium&quot;&gt;${item.elemen || 'Fase E'}&lt;/strong&gt;
+                                &lt;/span&gt;
+                                &lt;button class=&quot;bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-white text-white dark:text-slate-900 text-xs font-semibold px-4 py-2 rounded-xl transition-all shadow-sm&quot;&gt;
+                                    Buka Modul
+                                &lt;/button&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    `;
+                    modulesContainer.innerHTML += card;
+                });
+            }, (error) =&gt; {
+                console.error("Firebase Snapshot Error: ", error);
+                modulesContainer.innerHTML = `<p class="text-red-500 text-xs col-span-2">Gagal memuat database. Periksa konfigurasi API Key Firebase Anda.</p>`;
+            });
+        }
+
+        // Eksekusi fungsi saat halaman dimuat sempurna
+        initTimeTracker();
+        initRealtimeDatabase();
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                                        </div>
+                                    </div>
+
+                                    <!-- PREVIEW PANEL -->
+                                    <div id="panel-preview"
+                                        style="display: flex; flex-direction: column; min-width: 0;">
+                                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                                            <div
+                                                style="width: 8px; height: 8px; border-radius: 50%; background-color: #22c55e;">
+                                            </div>
+                                            <span
+                                                style="color: #94a3b8; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Live
+                                                Preview Workspace</span>
+                                        </div>
+                                        <div
+                                            style="background-color: white; border-radius: 8px; border: 4px solid #f8fafc; height: 350px; overflow: hidden; flex-grow: 1; box-shadow: 0 0 0 1px #cbd5e1;">
+                                            <iframe src="preview_lms.html"
+                                                style="width: 100%; height: 100%; border: none; background-color: #f8fafc;"></iframe>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- LAYOUT SCRIPT -->
+                            <script>
+                                function setLayout(mode) {
+                                    const workspace = document.getElementById('viewer-workspace');
+                                    const panelEditor = document.getElementById('panel-editor');
+                                    const panelPreview = document.getElementById('panel-preview');
+
+                                    const btnSplit = document.getElementById('btn-layout-split');
+                                    const btnEditor = document.getElementById('btn-layout-editor');
+                                    const btnPreview = document.getElementById('btn-layout-preview');
+
+                                    // Reset buttons
+                                    [btnSplit, btnEditor, btnPreview].forEach(btn => {
+                                        btn.style.backgroundColor = 'transparent';
+                                        btn.style.color = '#cbd5e1';
+                                    });
+
+                                    if (mode === 'split') {
+                                        workspace.style.gridTemplateColumns = '1fr 1fr';
+                                        panelEditor.style.display = 'flex';
+                                        panelPreview.style.display = 'flex';
+                                        btnSplit.style.backgroundColor = '#3b82f6';
+                                        btnSplit.style.color = 'white';
+                                    } else if (mode === 'editor') {
+                                        workspace.style.gridTemplateColumns = '1fr';
+                                        panelEditor.style.display = 'flex';
+                                        panelPreview.style.display = 'none';
+                                        btnEditor.style.backgroundColor = '#3b82f6';
+                                        btnEditor.style.color = 'white';
+                                    } else if (mode === 'preview') {
+                                        workspace.style.gridTemplateColumns = '1fr';
+                                        panelEditor.style.display = 'none';
+                                        panelPreview.style.display = 'flex';
+                                        btnPreview.style.backgroundColor = '#3b82f6';
+                                        btnPreview.style.color = 'white';
+                                    }
+                                }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        <!-- SLIDE 3 -->
+        <div class="slide" id="slide-3">
+            <div class="slide-header">
+                <div class="slide-badge">Langkah 3</div>
+                <h2>Dashboard Utama & Materi Semester</h2>
+            </div>
+            <div class="conversation">
+
+                <!-- USER -->
+                <div class="side user-side">
+                    <div class="avatar-box">
+                        <div class="avatar">👨‍🏫</div>
+                        <div class="char-name">Guru PJOK</div>
+                    </div>
+                    <div class="text-box"><i class="fas fa-quote-left"></i>Bagaimana kalau dihalaman dashboard itu
+                        tersedia thumbnail Piliihan kelas X, XI, XII serta pilihan materi dari semester 1 dan semester 2
+                        kemudian isi persemester nanti diuraikan lagi menjadi beberapa materi, untuk semester 1: 6
+                        materi untuk semester 2: 4 materi</div>
+                </div>
+
+                <!-- AI -->
+                <div class="side ai-side">
+                    <div class="avatar-box">
+                        <div class="avatar">🤖</div>
+                        <div class="char-name">Asisten AI</div>
+                    </div>
+                    <div class="text-box">
+                        <div class="ai-placeholder">
+                            <i class="fas fa-magic"></i>
+                            <span>AI sedang mendesain struktur dashboard...</span>
+                        </div>
+                        <div class="ai-content walkthrough">
+                            <p>Rencana pengembangan ini sangat bagus! Memecah Pilihan kelas menjadi 3 tingkat, serta
+                                materi berdasarkan Semester di halaman dashboard utama, kemudian menguraikannya menjadi
+                                total 10 topik spesifik (6 di Semester 1 dan 4 di Semester 2), akan membuat UI terasa
+                                jauh lebih rapi, terstruktur, dan tidak mengintimidasi siswa (bebas dari cognitive
+                                overload).</p>
+
+                            <!-- INTERACTIVE LIVE HTML VIEWER -->
+                            <div class="interactive-viewer-wrapper"
+                                style="margin-top: 20px; background-color: #0f172a; border-radius: 12px; padding: 20px; border: 1px solid #1e293b; box-shadow: 0 15px 35px rgba(0,0,0,0.4); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+
+                                <!-- HEADER -->
+                                <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px;">
+                                    <div
+                                        style="background: linear-gradient(135deg, #3b82f6, #2563eb); padding: 8px; border-radius: 8px; color: white;">
+                                        <i class="fas fa-laptop-code" style="font-size: 1.2rem;"></i>
+                                    </div>
+                                    <div>
+                                        <h3
+                                            style="color: #f8fafc; font-size: 1.1rem; font-weight: 700; margin: 0 0 4px 0;">
+                                            Interactive Live HTML Viewer (Slide 3)</h3>
+                                        <p style="color: #94a3b8; font-size: 0.8rem; margin: 0;">Preview desain
+                                            Dashboard dan Hierarki Materi per Semester.</p>
+                                    </div>
+                                </div>
+
+                                <!-- TOOLBAR -->
+                                <div
+                                    style="background-color: #1e293b; border-radius: 8px; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                                    <div style="display: flex; align-items: center; gap: 15px;">
+                                        <button
+                                            style="background: transparent; border: none; color: #cbd5e1; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 6px;"><i
+                                                class="fas fa-arrow-left"></i> Kembali</button>
+                                        <div style="width: 1px; height: 16px; background-color: #334155;"></div>
+                                        <span style="color: #94a3b8; font-size: 0.8rem;">Layout:</span>
+                                        <div
+                                            style="display: flex; background-color: #0f172a; border-radius: 6px; overflow: hidden; border: 1px solid #334155;">
+                                            <button onclick="setLayout3('split')" id="btn-layout-split-3"
+                                                style="background-color: #3b82f6; color: white; border: none; padding: 6px 12px; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;"><i
+                                                    class="fas fa-columns"></i> Separuh</button>
+                                            <button onclick="setLayout3('editor')" id="btn-layout-editor-3"
+                                                style="background-color: transparent; color: #cbd5e1; border: none; padding: 6px 12px; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;"><i
+                                                    class="fas fa-code"></i> Editor Penuh</button>
+                                            <button onclick="setLayout3('preview')" id="btn-layout-preview-3"
+                                                style="background-color: transparent; color: #cbd5e1; border: none; padding: 6px 12px; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;"><i
+                                                    class="fas fa-play-circle"></i> Preview Penuh</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- WORKSPACE -->
+                                <div id="viewer-workspace-3"
+                                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; transition: all 0.3s ease;">
+
+                                    <!-- EDITOR PANEL -->
+                                    <div id="panel-editor-3"
+                                        style="display: flex; flex-direction: column; min-width: 0;">
+                                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                                            <i class="fab fa-html5" style="color: #f97316; font-size: 0.9rem;"></i>
+                                            <span
+                                                style="color: #94a3b8; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Raw
+                                                HTML Editor</span>
+                                        </div>
+                                        <div
+                                            style="background-color: #020617; border-radius: 8px; border: 1px solid #1e293b; padding: 15px; height: 350px; overflow-y: auto; overflow-x: auto; flex-grow: 1;">
+                                            <pre
+                                                style="margin: 0; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.8rem; line-height: 1.6; color: #e2e8f0;"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;id&quot; class=&quot;scroll-smooth&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;LMS PJOK - SMAN 2 Ciamis&lt;/title&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;script&gt;
+        tailwind.config = {
+            darkMode: &#39;class&#39;,
+        }
+    &lt;/script&gt;
+    &lt;link href=&quot;https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;style&gt;
+        body { font-family: &#39;Plus Jakarta Sans&#39;, sans-serif; }
+        .apa-reference { padding-left: 2rem; text-indent: -2rem; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body class=&quot;bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 transition-colors duration-300 min-h-screen flex flex-col md:flex-row&quot;&gt;
+
+    &lt;!-- ==========================================
+      1. SIDEBAR KIRI (Navigasi Portal Pusat)
+    ========================================== --&gt;
+    &lt;aside class=&quot;hidden md:flex flex-col w-64 text-slate-400 fixed h-screen z-40 border-r border-slate-900 p-4 justify-between&quot; style=&quot;background-color: #0b1329;&quot;&gt;
+        &lt;div class=&quot;space-y-6&quot;&gt;
+            &lt;!-- Header Logo LMS PJOK --&gt;
+            &lt;div class=&quot;flex items-center gap-3 px-2 py-3&quot;&gt;
+                &lt;div class=&quot;w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md&quot;&gt;P&lt;/div&gt;
+                &lt;div&gt;
+                    &lt;h2 class=&quot;font-bold text-sm text-white leading-tight tracking-wide&quot;&gt;LMS PJOK&lt;/h2&gt;
+                    &lt;p class=&quot;text-[10px] text-slate-500&quot;&gt;Fase E • SMAN 2 Ciamis&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Navigasi Menu --&gt;
+            &lt;nav class=&quot;space-y-2&quot; id=&quot;desktop-nav&quot;&gt;
+                &lt;button onclick=&quot;navigateTo(&#39;akun&#39;)&quot; id=&quot;nav-desk-akun&quot; class=&quot;w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white transition-colors&quot;&gt;
+                    &lt;span class=&quot;text-purple-400 text-sm&quot;&gt;👤&lt;/span&gt; Akun
+                &lt;/button&gt;
+                &lt;button onclick=&quot;navigateTo(&#39;dashboard&#39;)&quot; id=&quot;nav-desk-dashboard&quot; class=&quot;w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white transition-colors&quot;&gt;
+                    &lt;span class=&quot;text-sm&quot;&gt;📊&lt;/span&gt; Dashboard
+                &lt;/button&gt;
+                &lt;button onclick=&quot;navigateTo(&#39;modul&#39;)&quot; id=&quot;nav-desk-modul&quot; class=&quot;w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white transition-colors&quot;&gt;
+                    &lt;span class=&quot;text-teal-400 text-sm&quot;&gt;📚&lt;/span&gt; Modul PJOK
+                &lt;/button&gt;
+                &lt;button onclick=&quot;navigateTo(&#39;kalender&#39;)&quot; id=&quot;nav-desk-kalender&quot; class=&quot;w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white transition-colors&quot;&gt;
+                    &lt;span class=&quot;text-blue-400 text-sm&quot;&gt;📅&lt;/span&gt; Kalender Akademik
+                &lt;/button&gt;
+                &lt;button onclick=&quot;navigateTo(&#39;referensi&#39;)&quot; id=&quot;nav-desk-referensi&quot; class=&quot;w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white transition-colors&quot;&gt;
+                    &lt;span class=&quot;text-amber-400 text-sm&quot;&gt;🔖&lt;/span&gt; Referensi
+                &lt;/button&gt;
+                &lt;a href=&quot;https://wa.me/6281234567890?text=Halo%20Guru%20PJOK%20SMAN%202%20Ciamis...&quot; target=&quot;_blank&quot; class=&quot;flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white transition-colors justify-between w-full&quot;&gt;
+                    &lt;span class=&quot;flex items-center gap-3&quot;&gt;&lt;span class=&quot;text-pink-400 text-sm&quot;&gt;📥&lt;/span&gt; Inbox&lt;/span&gt;
+                    &lt;span class=&quot;bg-blue-600 text-white font-bold text-[9px] px-2 py-0.5 rounded-full&quot;&gt;3 Baru&lt;/span&gt;
+                &lt;/a&gt;
+            &lt;/nav&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;pt-4 border-t border-slate-900&quot;&gt;
+            &lt;button onclick=&quot;navigateTo(&#39;bantuan&#39;)&quot; id=&quot;nav-desk-bantuan&quot; class=&quot;w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white transition-colors&quot;&gt;
+                &lt;span class=&quot;text-red-400 text-sm&quot;&gt;❓&lt;/span&gt; Pusat Bantuan
+            &lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/aside&gt;
+
+    &lt;!-- ==========================================
+      2. KONTEN HIERARKI KANAN (Rumah Utama/SPA)
+    ========================================== --&gt;
+    &lt;div class=&quot;flex-grow md:pl-64 flex flex-col min-h-screen pb-20 md:pb-0&quot;&gt;
+        
+        &lt;!-- Sticky Header Bar --&gt;
+        &lt;nav class=&quot;bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-30 px-6 py-4 flex justify-between items-center shadow-sm&quot;&gt;
+            &lt;div class=&quot;flex items-center gap-3 md:hidden&quot;&gt;
+                &lt;div class=&quot;w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-base&quot;&gt;P&lt;/div&gt;
+                &lt;h1 class=&quot;font-bold text-base text-slate-900 dark:text-white tracking-tight&quot; id=&quot;mobile-page-title&quot;&gt;Dashboard&lt;/h1&gt;
+            &lt;/div&gt;
+            
+            &lt;div class=&quot;hidden md:block&quot;&gt;
+                &lt;span class=&quot;text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-lg&quot;&gt;Gudang Pusat Informasi • SMAN 2 Ciamis&lt;/span&gt;
+            &lt;/div&gt;
+            
+            &lt;div class=&quot;flex items-center gap-3&quot;&gt;
+                &lt;div id=&quot;time-tracker&quot; class=&quot;flex items-center gap-1.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 px-2.5 py-1 rounded-lg&quot;&gt;
+                    &lt;span class=&quot;text-xs font-bold text-amber-800 dark:text-amber-300 font-mono&quot;&gt;⏱️ &lt;span id=&quot;spend-time-clock&quot;&gt;00:00&lt;/span&gt;&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;button id=&quot;theme-toggle&quot; class=&quot;p-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition-colors&quot;&gt;
+                    &lt;svg id=&quot;theme-toggle-light-icon&quot; class=&quot;hidden w-4 h-4 text-amber-500&quot; fill=&quot;currentColor&quot; viewBox=&quot;0 0 20 20&quot;&gt;&lt;path d=&quot;M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 14.05a1 1 0 011.414 0l.707.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414zm-.707-8.485a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0zM4 11a1 1 0 100-2H3a1 1 0 100 2h1z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+                    &lt;svg id=&quot;theme-toggle-dark-icon&quot; class=&quot;hidden w-4 h-4 text-slate-500&quot; fill=&quot;currentColor&quot; viewBox=&quot;0 0 20 20&quot;&gt;&lt;path d=&quot;M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+                &lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/nav&gt;
+
+        &lt;!-- HALAMAN-HALAMAN KONTEN INTERAKTIF --&gt;
+        
+        &lt;!-- Halaman Akun --&gt;
+        &lt;section id=&quot;page-akun&quot; class=&quot;hidden max-w-7xl w-full mx-auto px-4 py-6&quot;&gt;
+            &lt;div class=&quot;bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm p-6 max-w-2xl mx-auto&quot;&gt;
+                &lt;div class=&quot;flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-slate-100 dark:border-slate-700&quot;&gt;
+                    &lt;div class=&quot;w-24 h-24 rounded-full bg-gradient-to-tr from-purple-500 to-indigo-600 flex items-center justify-center text-white text-3xl font-bold shadow-lg&quot;&gt;👤&lt;/div&gt;
+                    &lt;div class=&quot;text-center sm:text-left&quot;&gt;
+                        &lt;h3 class=&quot;text-lg font-bold text-slate-900 dark:text-white&quot;&gt;Ahmad Fauzi&lt;/h3&gt;
+                        &lt;p class=&quot;text-xs text-slate-400&quot;&gt;NISN: 0076543210 • Siswa Aktif&lt;/p&gt;
+                        &lt;span class=&quot;inline-block mt-2 bg-purple-50 dark:bg-purple-950 text-purple-600 dark:text-purple-400 text-[10px] font-bold px-2.5 py-0.5 rounded-full&quot;&gt;Kelas X - Fase E&lt;/span&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;mt-6 space-y-4 text-xs&quot;&gt;
+                    &lt;div class=&quot;grid grid-cols-3 gap-2&quot;&gt;&lt;span class=&quot;text-slate-400&quot;&gt;Instansi Sekolah&lt;/span&gt;&lt;span class=&quot;col-span-2 font-semibold text-slate-700 dark:text-slate-300&quot;&gt;SMAN 2 Ciamis&lt;/span&gt;&lt;/div&gt;
+                    &lt;div class=&quot;grid grid-cols-3 gap-2&quot;&gt;&lt;span class=&quot;text-slate-400&quot;&gt;Email Utama&lt;/span&gt;&lt;span class=&quot;col-span-2 font-medium text-slate-700 dark:text-slate-300&quot;&gt;ahmad.fauzi@sman2ciamis.sch.id&lt;/span&gt;&lt;/div&gt;
+                    &lt;div class=&quot;grid grid-cols-3 gap-2&quot;&gt;&lt;span class=&quot;text-slate-400&quot;&gt;Status Pembelajaran&lt;/span&gt;&lt;span class=&quot;col-span-2 font-medium text-green-500&quot;&gt;Terhubung Pusat&lt;/span&gt;&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/section&gt;
+
+        &lt;!-- Halaman Dashboard --&gt;
+        &lt;section id=&quot;page-dashboard&quot; class=&quot;max-w-7xl w-full mx-auto px-4 py-6 space-y-4&quot;&gt;
+            &lt;h2 class=&quot;text-lg font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-700 pb-2&quot;&gt;Daftar Kelas &amp; Fase PJOK • Gudang Intisari&lt;/h2&gt;
+            &lt;div class=&quot;grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6&quot;&gt;
+                
+                &lt;div onclick=&quot;navigateTo(&#39;modul&#39;)&quot; class=&quot;cursor-pointer bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden group hover:border-blue-500 hover:shadow-md transition-all duration-300&quot;&gt;
+                    &lt;div class=&quot;h-36 bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 relative p-4 flex flex-col justify-between&quot;&gt;
+                        &lt;div class=&quot;absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]&quot;&gt;&lt;/div&gt;
+                        &lt;span class=&quot;bg-white/20 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded-md self-start&quot;&gt;Aktif&lt;/span&gt;
+                        &lt;h3 class=&quot;text-white font-bold text-base leading-tight&quot;&gt;Kelas X&lt;br&gt;&lt;span class=&quot;text-sm font-normal text-blue-100&quot;&gt;Fase E PJOK&lt;/span&gt;&lt;/h3&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;p-4 flex justify-between items-center text-xs&quot;&gt;
+                        &lt;span class=&quot;text-slate-400&quot;&gt;10 Ringkasan Modul&lt;/span&gt;
+                        &lt;span class=&quot;text-blue-500 font-bold group-hover:translate-x-1 transition-transform&quot;&gt;Lihat Gudang Materi ➔&lt;/span&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;opacity-75 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden relative&quot;&gt;
+                    &lt;div class=&quot;h-36 bg-gradient-to-br from-emerald-500 via-teal-600 to-cyan-600 relative p-4 flex flex-col justify-between&quot;&gt;
+                        &lt;span class=&quot;bg-black/30 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded-md self-start&quot;&gt;Terkunci&lt;/span&gt;
+                        &lt;h3 class=&quot;text-white font-bold text-base leading-tight&quot;&gt;Kelas XI&lt;br&gt;&lt;span class=&quot;text-sm font-normal text-emerald-100&quot;&gt;Fase F PJOK&lt;/span&gt;&lt;/h3&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;p-4 flex justify-between items-center text-xs text-slate-400&quot;&gt;
+                        &lt;span&gt;Akses di Tahun Ajaran Depan&lt;/span&gt;
+                        &lt;span&gt;🔒&lt;/span&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;opacity-75 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden relative&quot;&gt;
+                    &lt;div class=&quot;h-36 bg-gradient-to-br from-orange-500 via-amber-600 to-red-600 relative p-4 flex flex-col justify-between&quot;&gt;
+                        &lt;span class=&quot;bg-black/30 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded-md self-start&quot;&gt;Terkunci&lt;/span&gt;
+                        &lt;h3 class=&quot;text-white font-bold text-base leading-tight&quot;&gt;Kelas XII&lt;br&gt;&lt;span class=&quot;text-sm font-normal text-orange-100&quot;&gt;Fase F PJOK&lt;/span&gt;&lt;/h3&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;p-4 flex justify-between items-center text-xs text-slate-400&quot;&gt;
+                        &lt;span&gt;Akses di Tahun Ajaran Depan&lt;/span&gt;
+                        &lt;span&gt;🔒&lt;/span&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/section&gt;
+
+        &lt;!-- Halaman Modul (Intisari) --&gt;
+        &lt;section id=&quot;page-modul&quot; class=&quot;hidden max-w-7xl w-full mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-4 gap-6&quot;&gt;
+            &lt;div class=&quot;lg:col-span-1 space-y-3&quot;&gt;
+                &lt;div class=&quot;bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-row lg:flex-col gap-2 overflow-x-auto&quot;&gt;
+                    &lt;button id=&quot;btn-sem1&quot; class=&quot;whitespace-nowrap flex-grow text-center lg:text-left flex items-center justify-between px-4 py-2.5 rounded-lg font-semibold text-xs transition-all bg-blue-600 text-white&quot;&gt;
+                        &lt;span&gt;📅 Semester 1&lt;/span&gt;
+                    &lt;/button&gt;
+                    &lt;button id=&quot;btn-sem2&quot; class=&quot;whitespace-nowrap flex-grow text-center lg:text-left flex items-center justify-between px-4 py-2.5 rounded-lg font-semibold text-xs transition-all bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300&quot;&gt;
+                        &lt;span&gt;📅 Semester 2&lt;/span&gt;
+                    &lt;/button&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div id=&quot;scroll_target&quot; class=&quot;lg:col-span-3 space-y-4 scroll-mt-24&quot;&gt;
+                &lt;div class=&quot;flex justify-between items-center border-b border-slate-200 dark:border-slate-700 pb-2&quot;&gt;
+                    &lt;h2 id=&quot;current-semester-title&quot; class=&quot;text-lg font-bold text-slate-900 dark:text-white&quot;&gt;Materi Semester 1&lt;/h2&gt;
+                    &lt;span id=&quot;materi-count-badge&quot; class=&quot;bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 font-bold text-xs px-2.5 py-1 rounded-full&quot;&gt;6 Materi&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;modules-container&quot; class=&quot;grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4&quot;&gt;&lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/section&gt;
+
+        &lt;!-- Halaman Kalender --&gt;
+        &lt;section id=&quot;page-kalender&quot; class=&quot;hidden max-w-7xl w-full mx-auto px-4 py-6&quot;&gt;
+            &lt;div class=&quot;bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col h-[70vh]&quot;&gt;
+                &lt;div class=&quot;bg-slate-100 dark:bg-slate-700/50 px-4 py-3 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center&quot;&gt;
+                    &lt;div class=&quot;flex items-center gap-2&quot;&gt;
+                        &lt;span class=&quot;text-blue-500 font-bold text-sm&quot;&gt;📅&lt;/span&gt;
+                        &lt;h3 class=&quot;text-xs font-bold text-slate-800 dark:text-white&quot;&gt;Agenda &amp; Jadwal Kegiatan Pembelajaran&lt;/h3&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;flex-grow w-full h-full bg-slate-50 dark:bg-slate-900&quot;&gt;
+                    &lt;iframe src=&quot;https://calendar.google.com/calendar/embed?src=id.indonesian%23holiday%40group.v.calendar.google.com&amp;ctz=Asia%2FJakarta&amp;wkst=2&quot; 
+                            style=&quot;border: 0&quot; class=&quot;w-full h-full opacity-90 dark:invert dark:hue-rotate-180 transition-all&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot;&gt;&lt;/iframe&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/section&gt;
+
+        &lt;!-- Halaman Referensi (Kaidah APA Edisi 7) --&gt;
+        &lt;section id=&quot;page-referensi&quot; class=&quot;hidden max-w-7xl w-full mx-auto px-4 py-6 space-y-6&quot;&gt;
+            &lt;div class=&quot;bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl p-6 text-white shadow-sm&quot;&gt;
+                &lt;h2 class=&quot;text-xl font-bold&quot;&gt;Referensi Standar Pembelajaran&lt;/h2&gt;
+                &lt;p class=&quot;text-xs text-orange-100 mt-1&quot;&gt;Acuan kajian kurikulum kurasi keilmuan Pendidikan Jasmani, Olahraga, dan Kesehatan jenjang Pendidikan Menengah (SMA).&lt;/p&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;grid grid-cols-1 lg:grid-cols-3 gap-6&quot;&gt;
+                &lt;div class=&quot;lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-4&quot;&gt;
+                    &lt;div class=&quot;flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-2&quot;&gt;
+                        &lt;span class=&quot;text-base&quot;&gt;📝&lt;/span&gt;
+                        &lt;h3 class=&quot;text-sm font-bold text-slate-900 dark:text-white&quot;&gt;Sitasi Konsep Kurikulum Nasional&lt;/h3&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;text-xs text-slate-600 dark:text-slate-400 space-y-3 leading-relaxed&quot;&gt;
+                        &lt;p&gt;
+                            Pelaksanaan kurikulum matapelajaran Pendidikan Jasmani, Olahraga, dan Kesehatan (PJOK) di tingkat Sekolah Menengah Atas menitikberatkan pada perolehan keterampilan gerak dasar terpadu serta penguatan sistem efikasi kebugaran jasmani yang berkelanjutan. Menurut panduan resmi dari Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi (2022), reorientasi kurikulum Merdeka dirancang untuk memberikan ruang fleksibilitas yang lebih lebar bagi murid dalam mengeksplorasi kemampuan taktis olahraga kelompok maupun mandiri.
+                        &lt;/p&gt;
+                        &lt;p&gt;
+                            Di samping aspek ketangkasan fisik, implementasi proses pembelajaran olahraga juga berkontribusi linear terhadap pembentukan regulasi emosi, sportivitas, serta karakter kerja sama tim (Lutan, 2020). Sinkronisasi ini sejalan dengan kerangka kerja global yang diamanatkan oleh World Health Organization (2020) mengenai pentingnya pemenuhan durasi minimal aktivitas fisik harian demi menekan prevalensi *sedentary behaviour* pada kelompok usia remaja.
+                        &lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;lg:col-span-1 bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-4&quot;&gt;
+                    &lt;div class=&quot;flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-2&quot;&gt;
+                        &lt;span class=&quot;text-base&quot;&gt;📚&lt;/span&gt;
+                        &lt;h3 class=&quot;text-sm font-bold text-slate-900 dark:text-white&quot;&gt;Daftar Pustaka (APA 7th Edition)&lt;/h3&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;space-y-4 text-[11px] text-slate-600 dark:text-slate-400 font-mono tracking-tight leading-relaxed&quot;&gt;
+                        &lt;div class=&quot;apa-reference&quot;&gt;
+                            Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi. (2022). &lt;em&gt;Panduan pembelajaran dan asesmen pendidikan anak usia dini, pendidikan dasar, dan pendidikan menengah&lt;/em&gt;. Badan Standar, Kurikulum, dan Asesmen Pendidikan.
+                        &lt;/div&gt;
+                        &lt;div class=&quot;apa-reference&quot;&gt;
+                            Lutan, R. (2020). &lt;em&gt;Pendidikan jasmani dan kesehatan: Perspektif teoretis dan praktis&lt;/em&gt;. Penerbit Universitas Pendidikan Indonesia.
+                        &lt;/div&gt;
+                        &lt;div class=&quot;apa-reference&quot;&gt;
+                            World Health Organization. (2020). &lt;em&gt;Guidelines on physical activity and sedentary behaviour&lt;/em&gt;. WHO Press.
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/section&gt;
+
+        &lt;!-- Halaman Pusat Bantuan --&gt;
+        &lt;section id=&quot;page-bantuan&quot; class=&quot;hidden max-w-7xl w-full mx-auto px-4 py-6 max-w-3xl&quot;&gt;
+            &lt;div class=&quot;text-center space-y-2 mb-8&quot;&gt;
+                &lt;h2 class=&quot;text-xl font-bold text-slate-900 dark:text-white&quot;&gt;Pusat Bantuan Layanan LMS&lt;/h2&gt;
+                &lt;p class=&quot;text-xs text-slate-400&quot;&gt;Punya pertanyaan seputar penggunaan aplikasi? Temukan jawabannya di bawah ini.&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;space-y-3&quot;&gt;
+                &lt;div class=&quot;bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden&quot;&gt;
+                    &lt;button onclick=&quot;toggleFAQ(1)&quot; class=&quot;w-full flex justify-between items-center p-4 text-left font-semibold text-xs text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors&quot;&gt;
+                        &lt;span&gt;❓ Bagaimana cara mengunduh modul materi lengkap?&lt;/span&gt;
+                        &lt;span id=&quot;faq-icon-1&quot; class=&quot;text-slate-400 transition-transform duration-200&quot;&gt;➕&lt;/span&gt;
+                    &lt;/button&gt;
+                    &lt;div id=&quot;faq-ans-1&quot; class=&quot;hidden px-4 pb-4 text-xs text-slate-500 dark:text-slate-400 leading-relaxed border-t border-slate-50 dark:border-slate-700/50 pt-3&quot;&gt;
+                        Halaman ini merupakan **Gudang Hub Utama**. Saat Anda klik &lt;strong class=&quot;text-blue-500&quot;&gt;&quot;Buka Modul&quot;&lt;/strong&gt;, Anda akan diarahkan otomatis ke situs eksternal terpisah tempat isi materi diletakkan. Di situs isi materi tersebut, Anda dapat mengunduh atau membaca dokumen secara menyeluruh.
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/section&gt;
+
+        &lt;!-- Footer --&gt;
+        &lt;footer class=&quot;bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 text-center py-4 text-[10px] text-slate-400 dark:text-slate-500 mt-auto&quot;&gt;
+            &amp;copy; 2026 Proyek Portal Hub LMS PJOK - SMAN 2 Ciamis
+        &lt;/footer&gt;
+    &lt;/div&gt;
+
+    &lt;!-- ==========================================
+      3. BOTTOM NAVIGATION BAR (Smartphone)
+    ========================================== --&gt;
+    &lt;div class=&quot;md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 px-2 py-2 flex justify-around items-center z-50 shadow-lg&quot;&gt;
+        &lt;button onclick=&quot;navigateTo(&#39;akun&#39;)&quot; class=&quot;flex flex-col items-center gap-0.5 text-slate-400&quot;&gt;
+            &lt;span class=&quot;text-base&quot;&gt;👤&lt;/span&gt;&lt;span class=&quot;text-[9px] font-medium&quot;&gt;Akun&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;button onclick=&quot;navigateTo(&#39;dashboard&#39;)&quot; class=&quot;flex flex-col items-center gap-0.5 text-slate-400&quot;&gt;
+            &lt;span class=&quot;text-base&quot;&gt;📊&lt;/span&gt;&lt;span class=&quot;text-[9px] font-medium&quot;&gt;Dashboard&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;button onclick=&quot;navigateTo(&#39;modul&#39;)&quot; class=&quot;flex flex-col items-center gap-0.5 text-slate-400&quot;&gt;
+            &lt;span class=&quot;text-base&quot;&gt;📚&lt;/span&gt;&lt;span class=&quot;text-[9px] font-medium&quot;&gt;Modul&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;button onclick=&quot;navigateTo(&#39;kalender&#39;)&quot; class=&quot;flex flex-col items-center gap-0.5 text-slate-400&quot;&gt;
+            &lt;span class=&quot;text-base&quot;&gt;📅&lt;/span&gt;&lt;span class=&quot;text-[9px] font-medium&quot;&gt;Jadwal&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;button onclick=&quot;navigateTo(&#39;referensi&#39;)&quot; class=&quot;flex flex-col items-center gap-0.5 text-slate-400&quot;&gt;
+            &lt;span class=&quot;text-base&quot;&gt;🔖&lt;/span&gt;&lt;span class=&quot;text-[9px] font-medium&quot;&gt;Referensi&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;a href=&quot;https://wa.me/6281234567890?text=Halo%20Guru%20PJOK%20SMAN%202%20Ciamis...&quot; target=&quot;_blank&quot; class=&quot;flex flex-col items-center gap-0.5 text-slate-400 relative&quot;&gt;
+            &lt;span class=&quot;text-base&quot;&gt;📥&lt;/span&gt;&lt;span class=&quot;text-[9px] font-medium&quot;&gt;Inbox&lt;/span&gt;
+            &lt;span class=&quot;absolute top-0 right-1 w-2 h-2 bg-red-500 rounded-full&quot;&gt;&lt;/span&gt;
+        &lt;/a&gt;
+    &lt;/div&gt;
+
+    &lt;!-- ENGINE CONTROLLER ROUTER &amp; DYNAMIC HUB LINKING --&gt;
+    &lt;script type=&quot;module&quot;&gt;
+        // 🔗 SILAKAN GANTI NILAI &#39;url_materi&#39; PADA MASING-MASING OBJEK BERIKUT SESUAI WEB MATERI TERPISAH ANDA
+        const templateMateri = [
+            { 
+                judul: &quot;Permainan Bola Basket&quot;, semester: 1, kategori: &quot;Bola Besar&quot;, durasi: 45, 
+                deskripsi: &quot;Mempelajari teknik passing, dribbling, dan shooting dasar pada fase E.&quot;, 
+                image_url: &quot;https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&quot;,
+                url_materi: &quot;https://tautan-web-materi-basket-anda.com&quot; 
+            },
+            { 
+                judul: &quot;Taktik Bulutangkis&quot;, semester: 1, kategori: &quot;Bola Kecil&quot;, durasi: 40, 
+                deskripsi: &quot;Analisis penempatan bola dan teknik footwork permainan tunggal.&quot;, 
+                image_url: &quot;https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=400&quot;,
+                url_materi: &quot;https://tautan-web-materi-badminton-anda.com&quot; 
+            },
+            { 
+                judul: &quot;Lari Jarak Pendek&quot;, semester: 1, kategori: &quot;Atletik&quot;, durasi: 30, 
+                deskripsi: &quot;Teknik start jongkok dan biomekanika akselerasi lari sprint.&quot;, 
+                image_url: &quot;https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=400&quot;,
+                url_materi: &quot;https://link-materi-atletik.com&quot;
+            },
+            { 
+                judul: &quot;Pencak Silat Dasar&quot;, semester: 1, kategori: &quot;Bela Diri&quot;, durasi: 50, 
+                deskripsi: &quot;Latihan kuda-kuda, pola langkah, dan teknik tangkisan praktis.&quot;, 
+                image_url: &quot;https://images.unsplash.com/photo-1555597673-b21d5c935865?w=400&quot;,
+                url_materi: &quot;https://link-materi-silat.com&quot;
+            },
+            { 
+                judul: &quot;Kebugaran Jasmani&quot;, semester: 1, kategori: &quot;Latihan Fisik&quot;, durasi: 45, 
+                deskripsi: &quot;Mengukur daya tahan jantung, kekuatan otot, dan kelenturan tubuh.&quot;, 
+                image_url: &quot;https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=400&quot;,
+                url_materi: &quot;https://link-materi-kebugaran.com&quot;
+            },
+            { 
+                judul: &quot;Gizi &amp; Pola Makan Sehat&quot;, semester: 1, kategori: &quot;Kesehatan&quot;, durasi: 35, 
+                deskripsi: &quot;Menghitung kebutuhan kalori harian dan memilih asupan gizi seimbang.&quot;, 
+                image_url: &quot;https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400&quot;,
+                url_materi: &quot;https://link-materi-gizi.com&quot;
+            },
+            { 
+                judul: &quot;Senam Lantai (Floor Exercise)&quot;, semester: 2, kategori: &quot;Senam&quot;, durasi: 45, 
+                deskripsi: &quot;Gerakan roll depan, roll belakang, dan menjaga keseimbangan dinamis.&quot;, 
+                image_url: &quot;https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=400&quot;,
+                url_materi: &quot;https://link-materi-senam.com&quot;
+            },
+            { 
+                judul: &quot;Aktivitas Gerak Berirama&quot;, semester: 2, kategori: &quot;Senam Ritmik&quot;, durasi: 40, 
+                deskripsi: &quot;Koreografi langkah kaki dan ayunan lengan mengikuti irama musik.&quot;, 
+                image_url: &quot;https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&quot;,
+                url_materi: &quot;https://link-materi-ritmik.com&quot;
+            },
+            { 
+                judul: &quot;Renang Gaya Dada&quot;, semester: 2, kategori: &quot;Aktivitas Air&quot;, durasi: 60, 
+                deskripsi: &quot;Teknik meluncur, kayuhan kaki, pengambilan napas, dan keselamatan air.&quot;, 
+                image_url: &quot;https://images.unsplash.com/photo-1530541930197-ff16ac917b0e?w=400&quot;,
+                url_materi: &quot;https://link-materi-renang.com&quot;
+            },
+            { 
+                judul: &quot;Pencegahan Pergaulan Bebas&quot;, semester: 2, kategori: &quot;Kesehatan&quot;, durasi: 45, 
+                deskripsi: &quot;Edukasi kesehatan reproduksi remaja dan benteng psikologis diri.&quot;, 
+                image_url: &quot;https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&quot;,
+                url_materi: &quot;https://link-materi-kesehatan-remaja.com&quot; 
+            }
+        ];
+
+        let currentSelectedSemester = 1;
+
+        window.navigateTo = function(pageName) {
+            document.getElementById(&#39;page-akun&#39;).classList.add(&#39;hidden&#39;);
+            document.getElementById(&#39;page-dashboard&#39;).classList.add(&#39;hidden&#39;);
+            document.getElementById(&#39;page-modul&#39;).classList.add(&#39;hidden&#39;);
+            document.getElementById(&#39;page-kalender&#39;).classList.add(&#39;hidden&#39;);
+            document.getElementById(&#39;page-referensi&#39;).classList.add(&#39;hidden&#39;);
+            document.getElementById(&#39;page-bantuan&#39;).classList.add(&#39;hidden&#39;);
+
+            document.getElementById(`page-${pageName}`).classList.remove(&#39;hidden&#39;);
+
+            const mobileTitle = document.getElementById(&#39;mobile-page-title&#39;);
+            if(pageName === &#39;bantuan&#39;) {
+                mobileTitle.innerText = &#39;Pusat Bantuan&#39;;
+            } else if(pageName === &#39;kalender&#39;) {
+                mobileTitle.innerText = &#39;Kalender&#39;;
+            } else if(pageName === &#39;referensi&#39;) {
+                mobileTitle.innerText = &#39;Referensi&#39;;
+            } else {
+                mobileTitle.innerText = pageName.charAt(0).toUpperCase() + pageName.slice(1);
+            }
+
+            updateSidebarStyles(pageName);
+
+            if(pageName === &#39;modul&#39;) {
+                renderFilteredModules();
+            }
+            
+            window.scrollTo({ top: 0, behavior: &#39;smooth&#39; });
+        };
+
+        function updateSidebarStyles(activePage) {
+            const pages = [&#39;akun&#39;, &#39;dashboard&#39;, &#39;modul&#39;, &#39;kalender&#39;, &#39;referensi&#39;, &#39;bantuan&#39;];
+            pages.forEach(p =&gt; {
+                const btn = document.getElementById(`nav-desk-${p}`);
+                if(!btn) return;
+                if (p === activePage) {
+                    btn.className = &quot;w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold bg-blue-600 text-white shadow-md transition-all&quot;;
+                } else {
+                    btn.className = &quot;w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white transition-colors&quot;;
+                }
+            });
+        }
+
+        window.toggleFAQ = function(id) {
+            const answer = document.getElementById(`faq-ans-${id}`);
+            const icon = document.getElementById(`faq-icon-${id}`);
+            if(answer.classList.contains(&#39;hidden&#39;)) {
+                answer.classList.remove(&#39;hidden&#39;);
+                icon.innerText = &quot;➖&quot;;
+                icon.classList.add(&#39;text-blue-500&#39;);
+            } else {
+                answer.classList.add(&#39;hidden&#39;);
+                icon.innerText = &quot;➕&quot;;
+                icon.classList.remove(&#39;text-blue-500&#39;);
+            }
+        };
+
+        function renderFilteredModules() {
+            const container = document.getElementById(&quot;modules-container&quot;);
+            container.innerHTML = &quot;&quot;;
+            const filtered = templateMateri.filter(m =&gt; m.semester === currentSelectedSemester);
+            
+            document.getElementById(&quot;current-semester-title&quot;).innerText = `Materi Semester ${currentSelectedSemester}`;
+            document.getElementById(&quot;materi-count-badge&quot;).innerText = `${filtered.length} Materi`;
+
+            filtered.forEach((item) =&gt; {
+                container.innerHTML += `
+                    &lt;div class=&quot;bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col justify-between group hover:border-blue-500 transition-all duration-300&quot;&gt;
+                        &lt;div class=&quot;h-32 w-full overflow-hidden relative bg-slate-100&quot;&gt;
+                            &lt;img src=&quot;${item.image_url}&quot; alt=&quot;&quot; class=&quot;w-full h-full object-cover group-hover:scale-105 transition-transform duration-500&quot;&gt;
+                            &lt;span class=&quot;absolute bottom-2 right-2 bg-black/60 backdrop-blur-md text-white text-[9px] font-bold px-2 py-0.5 rounded&quot;&gt;⏱️ ${item.durasi} Min&lt;/span&gt;
+                        &lt;/div&gt;
+                        &lt;div class=&quot;p-4 flex-grow&quot;&gt;
+                            &lt;span class=&quot;text-[9px] font-bold text-blue-500 uppercase tracking-wide block mb-0.5&quot;&gt;${item.kategori}&lt;/span&gt;
+                            &lt;h4 class=&quot;font-bold text-slate-900 dark:text-white text-xs line-clamp-1&quot;&gt;${item.judul}&lt;/h4&gt;
+                            &lt;p class=&quot;text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 mt-1&quot;&gt;${item.deskripsi}&lt;/p&gt;
+                        &lt;/div&gt;
+                        &lt;div class=&quot;px-4 pb-4 pt-2 border-t border-slate-50 dark:border-slate-700/60 flex justify-between items-center text-[10px]&quot;&gt;
+                            &lt;span class=&quot;text-slate-400&quot;&gt;📖 Intisari&lt;/span&gt;
+                            &lt;a href=&quot;${item.url_materi}&quot; target=&quot;_blank&quot; class=&quot;bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-semibold px-3 py-1 rounded-lg hover:bg-blue-600 hover:text-white transition-colors text-center&quot;&gt;Buka Modul&lt;/a&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;`;
+            });
+        }
+
+        document.getElementById(&quot;btn-sem1&quot;).addEventListener(&quot;click&quot;, () =&gt; { currentSelectedSemester = 1; renderFilteredModules(); document.getElementById(&quot;btn-sem1&quot;).className = &quot;whitespace-nowrap flex-grow text-center lg:text-left flex items-center justify-between px-4 py-2.5 rounded-lg font-semibold text-xs transition-all bg-blue-600 text-white&quot;; document.getElementById(&quot;btn-sem2&quot;).className = &quot;whitespace-nowrap flex-grow text-center lg:text-left flex items-center justify-between px-4 py-2.5 rounded-lg font-semibold text-xs transition-all bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300&quot;; });
+        document.getElementById(&quot;btn-sem2&quot;).addEventListener(&quot;click&quot;, () =&gt; { currentSelectedSemester = 2; renderFilteredModules(); document.getElementById(&quot;btn-sem2&quot;).className = &quot;whitespace-nowrap flex-grow text-center lg:text-left flex items-center justify-between px-4 py-2.5 rounded-lg font-semibold text-xs transition-all bg-blue-600 text-white&quot;; document.getElementById(&quot;btn-sem1&quot;).className = &quot;whitespace-nowrap flex-grow text-center lg:text-left flex items-center justify-between px-4 py-2.5 rounded-lg font-semibold text-xs transition-all bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300&quot;; });
+
+        const themeToggleBtn = document.getElementById(&#39;theme-toggle&#39;);
+        const darkIcon = document.getElementById(&#39;theme-toggle-dark-icon&#39;);
+        const lightIcon = document.getElementById(&#39;theme-toggle-light-icon&#39;);
+        if (localStorage.getItem(&#39;color-theme&#39;) === &#39;dark&#39; || (!(&#39;color-theme&#39; in localStorage) &amp;&amp; window.matchMedia(&#39;(prefers-color-scheme: dark)&#39;).matches)) { document.documentElement.classList.add(&#39;dark&#39;); lightIcon.classList.remove(&#39;hidden&#39;); } else { document.documentElement.classList.remove(&#39;dark&#39;); darkIcon.classList.remove(&#39;hidden&#39;); }
+        themeToggleBtn.addEventListener(&#39;click&#39;, function() { lightIcon.classList.toggle(&#39;hidden&#39;); darkIcon.classList.toggle(&#39;hidden&#39;); if (document.documentElement.classList.contains(&#39;dark&#39;)) { document.documentElement.classList.remove(&#39;dark&#39;); localStorage.setItem(&#39;color-theme&#39;, &#39;light&#39;); } else { document.documentElement.classList.add(&#39;dark&#39;); localStorage.setItem(&#39;color-theme&#39;, &#39;dark&#39;); } });
+
+        let sec = 0; setInterval(() =&gt; { sec++; let m = Math.floor(sec/60), s = sec%60; document.getElementById(&#39;spend-time-clock&#39;).innerText = `${m&lt;10?&#39;0&#39;+m:m}:${s&lt;10?&#39;0&#39;+s:s}`; }, 1000);
+
+        navigateTo(&#39;dashboard&#39;);
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+                                        </div>
+                                    </div>
+
+                                    <!-- PREVIEW PANEL -->
+                                    <div id="panel-preview-3"
+                                        style="display: flex; flex-direction: column; min-width: 0;">
+                                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                                            <div
+                                                style="width: 8px; height: 8px; border-radius: 50%; background-color: #22c55e;">
+                                            </div>
+                                            <span
+                                                style="color: #94a3b8; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Live
+                                                Preview Workspace</span>
+                                        </div>
+                                        <div
+                                            style="background-color: white; border-radius: 8px; border: 4px solid #f8fafc; height: 350px; overflow: hidden; flex-grow: 1; box-shadow: 0 0 0 1px #cbd5e1;">
+                                            <iframe src="preview_dashboard.html"
+                                                style="width: 100%; height: 100%; border: none; background-color: #f8fafc;"></iframe>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- LAYOUT SCRIPT SLIDE 3 -->
+                            <script>
+                                function setLayout3(mode) {
+                                    const workspace = document.getElementById('viewer-workspace-3');
+                                    const panelEditor = document.getElementById('panel-editor-3');
+                                    const panelPreview = document.getElementById('panel-preview-3');
+
+                                    const btnSplit = document.getElementById('btn-layout-split-3');
+                                    const btnEditor = document.getElementById('btn-layout-editor-3');
+                                    const btnPreview = document.getElementById('btn-layout-preview-3');
+
+                                    [btnSplit, btnEditor, btnPreview].forEach(btn => {
+                                        btn.style.backgroundColor = 'transparent';
+                                        btn.style.color = '#cbd5e1';
+                                    });
+
+                                    if (mode === 'split') {
+                                        workspace.style.gridTemplateColumns = '1fr 1fr';
+                                        panelEditor.style.display = 'flex';
+                                        panelPreview.style.display = 'flex';
+                                        btnSplit.style.backgroundColor = '#3b82f6';
+                                        btnSplit.style.color = 'white';
+                                    } else if (mode === 'editor') {
+                                        workspace.style.gridTemplateColumns = '1fr';
+                                        panelEditor.style.display = 'flex';
+                                        panelPreview.style.display = 'none';
+                                        btnEditor.style.backgroundColor = '#3b82f6';
+                                        btnEditor.style.color = 'white';
+                                    } else if (mode === 'preview') {
+                                        workspace.style.gridTemplateColumns = '1fr';
+                                        panelEditor.style.display = 'none';
+                                        panelPreview.style.display = 'flex';
+                                        btnPreview.style.backgroundColor = '#3b82f6';
+                                        btnPreview.style.color = 'white';
+                                    }
+                                }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- SLIDE 4 -->
+        <div class="slide" id="slide-4">
+            <div class="slide-header">
+                <div class="slide-badge">Langkah 4</div>
+                <h2>Sistem Navigasi Hybrid (Desktop & Mobile)</h2>
+            </div>
+            <div class="conversation">
+
+                <!-- USER -->
+                <div class="side user-side">
+                    <div class="avatar-box">
+                        <div class="avatar">👨‍🏫</div>
+                        <div class="char-name">Guru PJOK</div>
+                    </div>
+                    <div class="text-box"><i class="fas fa-quote-left"></i>saya ingin menambahkan navigasi pada halaman
+                        awal seperti account, dashboard, modul, kalender, inbox, help di debelah kiri tapi tetap
+                        kompatible untuk pengguna android</div>
+                </div>
+
+                <!-- AI -->
+                <div class="side ai-side">
+                    <div class="avatar-box">
+                        <div class="avatar">🤖</div>
+                        <div class="char-name">Asisten AI</div>
+                    </div>
+                    <div class="text-box">
+                        <div class="ai-placeholder">
+                            <i class="fas fa-magic"></i>
+                            <span>AI sedang memproses layout navigasi hybrid...</span>
+                        </div>
+                        <div class="ai-content walkthrough">
+                            <p>Untuk memenuhi kebutuhan navigasi yang lengkap (Account, Dashboard, Modul, Kalender,
+                                Inbox, Help) seperti pada tampilan standar LMS berbasis Canvas/Kemendikbudristek di
+                                laptop, namun tetap kompatibel, responsif, dan user-friendly saat dibuka di Android,
+                                kita harus menerapkan strategi <strong>Responsive Sidebar & Bottom Navigation</strong>.
+                            </p>
+
+                            <!-- INTERACTIVE LIVE HTML VIEWER -->
+                            <div class="interactive-viewer-wrapper"
+                                style="margin-top: 20px; background-color: #0f172a; border-radius: 12px; padding: 20px; border: 1px solid #1e293b; box-shadow: 0 15px 35px rgba(0,0,0,0.4); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+
+                                <!-- HEADER -->
+                                <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px;">
+                                    <div
+                                        style="background: linear-gradient(135deg, #10b981, #059669); padding: 8px; border-radius: 8px; color: white;">
+                                        <i class="fas fa-mobile-alt" style="font-size: 1.2rem;"></i>
+                                    </div>
+                                    <div>
+                                        <h3
+                                            style="color: #f8fafc; font-size: 1.1rem; font-weight: 700; margin: 0 0 4px 0;">
+                                            Interactive Live HTML Viewer (Slide 4)</h3>
+                                        <p style="color: #94a3b8; font-size: 0.8rem; margin: 0;">Preview Layout Sidebar
+                                            (Desktop) dan Bottom Nav (Android).</p>
+                                    </div>
+                                </div>
+
+                                <!-- TOOLBAR -->
+                                <div
+                                    style="background-color: #1e293b; border-radius: 8px; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                                    <div style="display: flex; align-items: center; gap: 15px;">
+                                        <button
+                                            style="background: transparent; border: none; color: #cbd5e1; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 6px;"><i
+                                                class="fas fa-arrow-left"></i> Kembali</button>
+                                        <div style="width: 1px; height: 16px; background-color: #334155;"></div>
+                                        <span style="color: #94a3b8; font-size: 0.8rem;">Layout:</span>
+                                        <div
+                                            style="display: flex; background-color: #0f172a; border-radius: 6px; overflow: hidden; border: 1px solid #334155;">
+                                            <button onclick="setLayout4('split')" id="btn-layout-split-4"
+                                                style="background-color: #10b981; color: white; border: none; padding: 6px 12px; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;"><i
+                                                    class="fas fa-columns"></i> Separuh</button>
+                                            <button onclick="setLayout4('editor')" id="btn-layout-editor-4"
+                                                style="background-color: transparent; color: #cbd5e1; border: none; padding: 6px 12px; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;"><i
+                                                    class="fas fa-code"></i> Editor Penuh</button>
+                                            <button onclick="setLayout4('preview')" id="btn-layout-preview-4"
+                                                style="background-color: transparent; color: #cbd5e1; border: none; padding: 6px 12px; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;"><i
+                                                    class="fas fa-play-circle"></i> Preview Penuh</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- WORKSPACE -->
+                                <div id="viewer-workspace-4"
+                                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; transition: all 0.3s ease;">
+
+                                    <!-- EDITOR PANEL -->
+                                    <div id="panel-editor-4"
+                                        style="display: flex; flex-direction: column; min-width: 0;">
+                                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                                            <i class="fab fa-html5" style="color: #f97316; font-size: 0.9rem;"></i>
+                                            <span
+                                                style="color: #94a3b8; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Raw
+                                                HTML Editor</span>
+                                        </div>
+                                        <div
+                                            style="background-color: #020617; border-radius: 8px; border: 1px solid #1e293b; padding: 15px; height: 350px; overflow-y: auto; overflow-x: auto; flex-grow: 1;">
+                                            <pre
+                                                style="margin: 0; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.8rem; line-height: 1.6; color: #e2e8f0;"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;id&quot; class=&quot;scroll-smooth&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;LMS PJOK Fase E - Sistem Navigasi Hybrid&lt;/title&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;script&gt;
+        tailwind.config = {
+            darkMode: &#39;class&#39;,
+        }
+    &lt;/script&gt;
+    &lt;link href=&quot;https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;style&gt;
+        body { font-family: &#39;Plus Jakarta Sans&#39;, sans-serif; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body class=&quot;bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 transition-colors duration-300 min-h-screen flex flex-col md:flex-row&quot;&gt;
+
+    &lt;aside class=&quot;hidden md:flex flex-col w-64 bg-slate-900 text-slate-400 fixed h-screen z-40 border-r border-slate-800 p-4 justify-between&quot;&gt;
+        &lt;div class=&quot;space-y-6&quot;&gt;
+            &lt;div class=&quot;flex items-center gap-3 px-2 py-3 border-b border-slate-800&quot;&gt;
+                &lt;div class=&quot;w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg&quot;&gt;P&lt;/div&gt;
+                &lt;div&gt;
+                    &lt;h2 class=&quot;font-bold text-sm text-white leading-tight&quot;&gt;LMS PJOK&lt;/h2&gt;
+                    &lt;p class=&quot;text-[10px] text-slate-500&quot;&gt;Fase E • SMA Digital&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;nav class=&quot;space-y-1&quot;&gt;
+                &lt;a href=&quot;#account&quot; class=&quot;flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-800 hover:text-white transition-colors&quot;&gt;
+                    &lt;span&gt;👤&lt;/span&gt; Account
+                &lt;/a&gt;
+                &lt;a href=&quot;#dashboard&quot; class=&quot;flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold bg-blue-600 text-white shadow-lg shadow-blue-900/20 transition-all&quot;&gt;
+                    &lt;span&gt;📊&lt;/span&gt; Dashboard
+                &lt;/a&gt;
+                &lt;a href=&quot;#modul&quot; class=&quot;flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-800 hover:text-white transition-colors&quot;&gt;
+                    &lt;span&gt;📚&lt;/span&gt; Modul PJOK
+                &lt;/a&gt;
+                &lt;a href=&quot;#kalender&quot; class=&quot;flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-800 hover:text-white transition-colors&quot;&gt;
+                    &lt;span&gt;📅&lt;/span&gt; Kalender
+                &lt;/a&gt;
+                &lt;a href=&quot;#inbox&quot; class=&quot;flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-800 hover:text-white transition-colors justify-between w-full&quot;&gt;
+                    &lt;span class=&quot;flex items-center gap-3&quot;&gt;&lt;span&gt;📥&lt;/span&gt; Inbox&lt;/span&gt;
+                    &lt;span class=&quot;bg-blue-500/20 text-blue-400 font-bold text-[10px] px-2 py-0.5 rounded-full&quot;&gt;3 Baru&lt;/span&gt;
+                &lt;/a&gt;
+            &lt;/nav&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;border-t border-slate-800 pt-4&quot;&gt;
+            &lt;a href=&quot;#help&quot; class=&quot;flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-800 hover:text-white transition-colors&quot;&gt;
+                &lt;span&gt;❓&lt;/span&gt; Help Center
+            &lt;/a&gt;
+        &lt;/div&gt;
+    &lt;/aside&gt;
+
+
+    &lt;div class=&quot;flex-grow md:pl-64 flex flex-col min-h-screen pb-16 md:pb-0&quot;&gt;
+        
+        &lt;nav class=&quot;bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-30 px-6 py-4 flex justify-between items-center transition-colors shadow-sm&quot;&gt;
+            &lt;div class=&quot;flex items-center gap-3 md:hidden&quot;&gt;
+                &lt;div class=&quot;w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-base&quot;&gt;P&lt;/div&gt;
+                &lt;h1 class=&quot;font-bold text-base text-slate-900 dark:text-white tracking-tight&quot;&gt;LMS PJOK X&lt;/h1&gt;
+            &lt;/div&gt;
+            
+            &lt;div class=&quot;hidden md:block&quot;&gt;
+                &lt;span class=&quot;text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-lg&quot;&gt;Fase E (Kelas X)&lt;/span&gt;
+            &lt;/div&gt;
+            
+            &lt;div class=&quot;flex items-center gap-3&quot;&gt;
+                &lt;div id=&quot;time-tracker&quot; class=&quot;flex items-center gap-1.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 px-2.5 py-1 rounded-lg&quot;&gt;
+                    &lt;span class=&quot;text-xs font-bold text-amber-800 dark:text-amber-300 font-mono&quot;&gt;⏱️ &lt;span id=&quot;spend-time-clock&quot;&gt;00:00&lt;/span&gt;&lt;/span&gt;
+                &lt;/div&gt;
+
+                &lt;button id=&quot;theme-toggle&quot; class=&quot;p-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition-colors&quot;&gt;
+                    &lt;svg id=&quot;theme-toggle-light-icon&quot; class=&quot;hidden w-4 h-4 text-amber-500&quot; fill=&quot;currentColor&quot; viewBox=&quot;0 0 20 20&quot;&gt;&lt;path d=&quot;M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 14.05a1 1 0 011.414 0l.707.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414zm-.707-8.485a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0zM4 11a1 1 0 100-2H3a1 1 0 100 2h1z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+                    &lt;svg id=&quot;theme-toggle-dark-icon&quot; class=&quot;hidden w-4 h-4 text-slate-500&quot; fill=&quot;currentColor&quot; viewBox=&quot;0 0 20 20&quot;&gt;&lt;path d=&quot;M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+                &lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/nav&gt;
+
+        &lt;main class=&quot;max-w-7xl w-full mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-4 gap-6 flex-grow&quot;&gt;
+            &lt;div class=&quot;lg:col-span-1 space-y-3&quot;&gt;
+                &lt;div class=&quot;bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-row lg:flex-col gap-2 overflow-x-auto&quot;&gt;
+                    &lt;button id=&quot;btn-sem1&quot; class=&quot;whitespace-nowrap flex-grow text-center lg:text-left flex items-center justify-between px-4 py-2.5 rounded-lg font-semibold text-xs transition-all bg-blue-600 text-white&quot;&gt;
+                        &lt;span&gt;📅 Semester 1&lt;/span&gt;
+                    &lt;/button&gt;
+                    &lt;button id=&quot;btn-sem2&quot; class=&quot;whitespace-nowrap flex-grow text-center lg:text-left flex items-center justify-between px-4 py-2.5 rounded-lg font-semibold text-xs transition-all bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300&quot;&gt;
+                        &lt;span&gt;📅 Semester 2&lt;/span&gt;
+                    &lt;/button&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;lg:col-span-3 space-y-4&quot;&gt;
+                &lt;h2 id=&quot;current-semester-title&quot; class=&quot;text-lg font-bold text-slate-900 dark:text-white&quot;&gt;Materi Semester 1&lt;/h2&gt;
+                &lt;div id=&quot;modules-container&quot; class=&quot;grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4&quot;&gt;
+                    &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/main&gt;
+
+        &lt;footer class=&quot;bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 text-center py-4 text-[10px] text-slate-400 dark:text-slate-500&quot;&gt;
+            &amp;copy; 2026 Proyek LMS PJOK Mandiri
+        &lt;/footer&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 px-4 py-2 flex justify-around items-center z-50 shadow-lg&quot;&gt;
+        &lt;a href=&quot;#account&quot; class=&quot;flex flex-col items-center gap-0.5 text-slate-400 hover:text-blue-600&quot;&gt;
+            &lt;span class=&quot;text-lg&quot;&gt;👤&lt;/span&gt;&lt;span class=&quot;text-[9px] font-medium&quot;&gt;Akun&lt;/span&gt;
+        &lt;/a&gt;
+        &lt;a href=&quot;#dashboard&quot; class=&quot;flex flex-col items-center gap-0.5 text-blue-600&quot;&gt;
+            &lt;span class=&quot;text-lg&quot;&gt;📊&lt;/span&gt;&lt;span class=&quot;text-[9px] font-bold&quot;&gt;Dashboard&lt;/span&gt;
+        &lt;/a&gt;
+        &lt;a href=&quot;#modul&quot; class=&quot;flex flex-col items-center gap-0.5 text-slate-400 hover:text-blue-600&quot;&gt;
+            &lt;span class=&quot;text-lg&quot;&gt;📚&lt;/span&gt;&lt;span class=&quot;text-[9px] font-medium&quot;&gt;Modul&lt;/span&gt;
+        &lt;/a&gt;
+        &lt;a href=&quot;#kalender&quot; class=&quot;flex flex-col items-center gap-0.5 text-slate-400 hover:text-blue-600&quot;&gt;
+            &lt;span class=&quot;text-lg&quot;&gt;📅&lt;/span&gt;&lt;span class=&quot;text-[9px] font-medium&quot;&gt;Jadwal&lt;/span&gt;
+        &lt;/a&gt;
+        &lt;a href=&quot;#inbox&quot; class=&quot;flex flex-col items-center gap-0.5 text-slate-400 hover:text-blue-600 relative&quot;&gt;
+            &lt;span class=&quot;text-lg&quot;&gt;📥&lt;/span&gt;&lt;span class=&quot;text-[9px] font-medium&quot;&gt;Inbox&lt;/span&gt;
+            &lt;span class=&quot;absolute top-0 right-1 w-2 h-2 bg-red-500 rounded-full&quot;&gt;&lt;/span&gt;
+        &lt;/a&gt;
+    &lt;/div&gt;
+
+    &lt;script type=&quot;module&quot;&gt;
+        import { initializeApp } from &quot;https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js&quot;;
+        import { getFirestore, collection, onSnapshot } from &quot;https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js&quot;;
+
+        const firebaseConfig = {
+            apiKey: &quot;AIzaSyA1234567890-YOUR-API-KEY&quot;,
+            authDomain: &quot;lms-pjok-sekolah.firebaseapp.com&quot;,
+            projectId: &quot;lms-pjok-sekolah&quot;,
+            storageBucket: &quot;lms-pjok-sekolah.appspot.com&quot;,
+            messagingSenderId: &quot;1234567890&quot;,
+            appId: &quot;1:1234567890:web:abcdef123456&quot;
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        let currentSelectedSemester = 1;
+        let allCachedModules = [];
+
+        const modulesContainer = document.getElementById(&quot;modules-container&quot;);
+        const btnSem1 = document.getElementById(&quot;btn-sem1&quot;);
+        const btnSem2 = document.getElementById(&quot;btn-sem2&quot;);
+        const semesterTitle = document.getElementById(&quot;current-semester-title&quot;);
+
+        function startRealtimeSync() {
+            const modulesCollection = collection(db, &quot;modul_pjok&quot;);
+            onSnapshot(modulesCollection, (snapshot) =&gt; {
+                allCachedModules = [];
+                snapshot.forEach((doc) =&gt; { allCachedModules.push({ id: doc.id, ...doc.data() }); });
+                allCachedModules.sort((a, b) =&gt; (a.urutan || 0) - (b.urutan || 0));
+                renderFilteredModules();
+            });
+        }
+
+        function renderFilteredModules() {
+            modulesContainer.innerHTML = &quot;&quot;;
+            const filtered = allCachedModules.filter(m =&gt; parseInt(m.semester) === currentSelectedSemester);
+            semesterTitle.innerText = currentSelectedSemester === 1 ? &quot;Materi Semester 1&quot; : &quot;Materi Semester 2&quot;;
+
+            if (filtered.length === 0) {
+                modulesContainer.innerHTML = `&lt;p class=&quot;col-span-full text-center text-xs text-slate-400 py-6&quot;&gt;Belum ada modul di Firebase.&lt;/p&gt;`;
+                return;
+            }
+
+            filtered.forEach((item) =&gt; {
+                const img = item.image_url || `https://images.unsplash.com/photo-1517649763962-0c623066013b?w=400`;
+                modulesContainer.innerHTML += `
+                    &lt;div class=&quot;bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col justify-between&quot;&gt;
+                        &lt;div class=&quot;p-4&quot;&gt;
+                            &lt;span class=&quot;text-[9px] font-bold text-blue-500 uppercase&quot;&gt;${item.kategori || &#39;PJOK&#39;}&lt;/span&gt;
+                            &lt;h4 class=&quot;font-bold text-slate-900 dark:text-white text-xs mt-0.5 line-clamp-1&quot;&gt;${item.judul}&lt;/h4&gt;
+                            &lt;p class=&quot;text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 mt-1&quot;&gt;${item.deskripsi}&lt;/p&gt;
+                        &lt;/div&gt;
+                        &lt;div class=&quot;px-4 pb-4 pt-2 border-t border-slate-50 dark:border-slate-700/60 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50 text-[10px]&quot;&gt;
+                            &lt;span class=&quot;text-slate-400&quot;&gt;⏱️ ${item.durasi || 0} mnt&lt;/span&gt;
+                            &lt;button class=&quot;bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-medium px-2.5 py-1 rounded-lg&quot;&gt;Buka&lt;/button&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;`;
+            });
+        }
+
+        function updateTabStyles() {
+            if (currentSelectedSemester === 1) {
+                btnSem1.className = &quot;whitespace-nowrap flex-grow text-center lg:text-left flex items-center justify-between px-4 py-2.5 rounded-lg font-semibold text-xs transition-all bg-blue-600 text-white&quot;;
+                btnSem2.className = &quot;whitespace-nowrap flex-grow text-center lg:text-left flex items-center justify-between px-4 py-2.5 rounded-lg font-semibold text-xs transition-all bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300&quot;;
+            } else {
+                btnSem2.className = &quot;whitespace-nowrap flex-grow text-center lg:text-left flex items-center justify-between px-4 py-2.5 rounded-lg font-semibold text-xs transition-all bg-blue-600 text-white&quot;;
+                btnSem1.className = &quot;whitespace-nowrap flex-grow text-center lg:text-left flex items-center justify-between px-4 py-2.5 rounded-lg font-semibold text-xs transition-all bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300&quot;;
+            }
+        }
+
+        btnSem1.addEventListener(&quot;click&quot;, () =&gt; { currentSelectedSemester = 1; updateTabStyles(); renderFilteredModules(); });
+        btnSem2.addEventListener(&quot;click&quot;, () =&gt; { currentSelectedSemester = 2; updateTabStyles(); renderFilteredModules(); });
+
+        // Dark Mode Engine 
+        const themeToggleBtn = document.getElementById(&#39;theme-toggle&#39;);
+        const darkIcon = document.getElementById(&#39;theme-toggle-dark-icon&#39;);
+        const lightIcon = document.getElementById(&#39;theme-toggle-light-icon&#39;);
+        if (localStorage.getItem(&#39;color-theme&#39;) === &#39;dark&#39; || (!(&#39;color-theme&#39; in localStorage) &amp;&amp; window.matchMedia(&#39;(prefers-color-scheme: dark)&#39;).matches)) { document.documentElement.classList.add(&#39;dark&#39;); lightIcon.classList.remove(&#39;hidden&#39;); } else { document.documentElement.classList.remove(&#39;dark&#39;); darkIcon.classList.remove(&#39;hidden&#39;); }
+        themeToggleBtn.addEventListener(&#39;click&#39;, function() { lightIcon.classList.toggle(&#39;hidden&#39;); darkIcon.classList.toggle(&#39;hidden&#39;); if (document.documentElement.classList.contains(&#39;dark&#39;)) { document.documentElement.classList.remove(&#39;dark&#39;); localStorage.setItem(&#39;color-theme&#39;, &#39;light&#39;); } else { document.documentElement.classList.add(&#39;dark&#39;); localStorage.setItem(&#39;color-theme&#39;, &#39;dark&#39;); } });
+
+        // Health Time Tracker 
+        let sec = 0; setInterval(() =&gt; { sec++; let m = Math.floor(sec/60), s = sec%60; document.getElementById(&#39;spend-time-clock&#39;).innerText = `${m&lt;10?&#39;0&#39;+m:m}:${s&lt;10?&#39;0&#39;+s:s}`; }, 1000);
+
+        startRealtimeSync();
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+                                        </div>
+                                    </div>
+
+                                    <!-- PREVIEW PANEL -->
+                                    <div id="panel-preview-4"
+                                        style="display: flex; flex-direction: column; min-width: 0;">
+                                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                                            <div
+                                                style="width: 8px; height: 8px; border-radius: 50%; background-color: #22c55e;">
+                                            </div>
+                                            <span
+                                                style="color: #94a3b8; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Live
+                                                Preview Workspace</span>
+                                        </div>
+                                        <div
+                                            style="background-color: white; border-radius: 8px; border: 4px solid #f8fafc; height: 350px; overflow: hidden; flex-grow: 1; box-shadow: 0 0 0 1px #cbd5e1;">
+                                            <iframe src="preview_nav.html"
+                                                style="width: 100%; height: 100%; border: none; background-color: #f8fafc;"></iframe>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- LAYOUT SCRIPT SLIDE 4 -->
+                            <script>
+                                function setLayout4(mode) {
+                                    const workspace = document.getElementById('viewer-workspace-4');
+                                    const panelEditor = document.getElementById('panel-editor-4');
+                                    const panelPreview = document.getElementById('panel-preview-4');
+
+                                    const btnSplit = document.getElementById('btn-layout-split-4');
+                                    const btnEditor = document.getElementById('btn-layout-editor-4');
+                                    const btnPreview = document.getElementById('btn-layout-preview-4');
+
+                                    [btnSplit, btnEditor, btnPreview].forEach(btn => {
+                                        btn.style.backgroundColor = 'transparent';
+                                        btn.style.color = '#cbd5e1';
+                                    });
+
+                                    if (mode === 'split') {
+                                        workspace.style.gridTemplateColumns = '1fr 1fr';
+                                        panelEditor.style.display = 'flex';
+                                        panelPreview.style.display = 'flex';
+                                        btnSplit.style.backgroundColor = '#10b981';
+                                        btnSplit.style.color = 'white';
+                                    } else if (mode === 'editor') {
+                                        workspace.style.gridTemplateColumns = '1fr';
+                                        panelEditor.style.display = 'flex';
+                                        panelPreview.style.display = 'none';
+                                        btnEditor.style.backgroundColor = '#10b981';
+                                        btnEditor.style.color = 'white';
+                                    } else if (mode === 'preview') {
+                                        workspace.style.gridTemplateColumns = '1fr';
+                                        panelEditor.style.display = 'none';
+                                        panelPreview.style.display = 'flex';
+                                        btnPreview.style.backgroundColor = '#10b981';
+                                        btnPreview.style.color = 'white';
+                                    }
+                                }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NAVIGATION -->
+        <div class="nav-controls">
+            <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)"><i class="fas fa-chevron-left"></i> KEMBALI
+                KE AWAL</button>
+            <div class="dots" id="dotsContainer">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+            <button class="nav-btn primary" id="nextBtn" onclick="changeSlide(1)">SELANJUTNYA <i
+                    class="fas fa-chevron-right"></i></button>
+        </div>
+
+        <!-- STATUS BAR -->
+        <div class="status-bar">
+            <div class="status-item"><i class="fas fa-server"></i> Platform: Node.js / HTML5</div>
+            <div class="status-item"><i class="fas fa-network-wired"></i> Database: Firebase Real-time</div>
+            <div class="status-item"><i class="fas fa-mobile-alt"></i> Mobile Responsive: Yes</div>
+            <div class="status-item" style="margin-left: auto;">
+                <i class="far fa-file-code"></i> Total Slide: <span id="slide-counter">1 / 4</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showIntro() {
+            const intro = document.getElementById('intro-screen');
+            if (intro) {
+                intro.style.visibility = 'visible';
+                intro.style.opacity = '1';
+            }
+        }
+
+        function startPresentation() {
+            const intro = document.getElementById('intro-screen');
+            if (intro) {
+                intro.style.opacity = '0';
+                setTimeout(() => {
+                    intro.style.visibility = 'hidden';
+                }, 800);
+            }
+        }
+
+        let currentSlide = 1;
+        const totalSlides = 4;
+
+        function changeSlide(direction) {
+            if (currentSlide === 1 && direction === -1) {
+                showIntro();
+                return;
+            }
+
+            if (currentSlide === totalSlides && direction === 1) {
+                showIntro();
+                setTimeout(() => {
+                    document.getElementById('slide-' + currentSlide).classList.remove('active');
+                    const dots = document.querySelectorAll('.dot');
+                    dots[currentSlide - 1].classList.remove('active');
+                    currentSlide = 1;
+                    document.getElementById('slide-' + currentSlide).classList.add('active');
+                    dots[currentSlide - 1].classList.add('active');
+                    document.getElementById('prevBtn').innerHTML = '<i class="fas fa-chevron-left"></i> KEMBALI KE AWAL';
+                    const nextBtn = document.getElementById('nextBtn');
+                    nextBtn.innerHTML = 'SELANJUTNYA <i class="fas fa-chevron-right"></i>';
+                    nextBtn.classList.remove('finish');
+                    nextBtn.classList.add('primary');
+                    document.getElementById('slide-counter').innerText = currentSlide + ' / ' + totalSlides;
+                }, 500);
+                return;
+            }
+
+            // Dummy to prevent double matching
+            if (false) {
+                showIntro();
+                return;
+            }
+
+            document.getElementById('slide-' + currentSlide).classList.remove('active');
+            const dots = document.querySelectorAll('.dot');
+            dots[currentSlide - 1].classList.remove('active');
+
+            currentSlide += direction;
+
+            document.getElementById('slide-' + currentSlide).classList.add('active');
+            dots[currentSlide - 1].classList.add('active');
+
+            const prevBtn = document.getElementById('prevBtn');
+            if (currentSlide === 1) {
+                prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i> KEMBALI KE AWAL';
+            } else {
+                prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i> SEBELUMNYA';
+            }
+
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentSlide === totalSlides) {
+                nextBtn.innerHTML = '<i class="fas fa-check"></i> SELESAI';
+                nextBtn.classList.replace('primary', 'finish');
+            } else {
+                nextBtn.innerHTML = 'SELANJUTNYA <i class="fas fa-chevron-right"></i>';
+                nextBtn.classList.remove('finish');
+                nextBtn.classList.add('primary');
+            }
+
+            document.getElementById('slide-counter').innerText = currentSlide + ' / ' + totalSlides;
+        }
+
+        // Auto-inject code into iframes for live preview
+        document.querySelectorAll('.interactive-viewer-wrapper').forEach(wrapper => {
+            const codeBlock = wrapper.querySelector('pre code');
+            const iframe = wrapper.querySelector('iframe');
+            if (codeBlock && iframe) {
+                iframe.srcdoc = codeBlock.textContent;
+            }
+        });
+    </script>
+</body>
+
+</html>
